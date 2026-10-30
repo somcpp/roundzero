@@ -39,8 +39,7 @@ export function SiteHeader({ section, className }: { section?: "docs"; className
           >
             Sign in
           </Link>
-          {/* /signup makes a demo account while DEMO_MODE is on, and shows the admin setup steps otherwise. */}
-          <ButtonLink href="/signup" size="sm">
+          <ButtonLink href={DEMO_MODE ? "/login?demo" : "/login"} size="sm">
             {DEMO_MODE ? "Try the demo" : "Get started"}
           </ButtonLink>
         </nav>

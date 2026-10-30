@@ -718,7 +718,7 @@ function Finale() {
             {brand.name} ·{" "}
             {DEMO_MODE ? (
               <>
-                <Link href="/login" className="text-inherit underline decoration-white/30 underline-offset-2 hover:text-white">
+                <Link href="/login?demo" className="text-inherit underline decoration-white/30 underline-offset-2 hover:text-white">
                   Try the demo
                 </Link>{" "}
                 ·{" "}
