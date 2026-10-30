@@ -43,8 +43,8 @@ export default function LandingPage() {
 // ── Hero ──────────────────────────────────────────────────────────────────
 
 const SPONSORS: { logo: ReactNode; name?: string; role: string }[] = [
-  { logo: <NvidiaLogo className="h-6 w-auto text-[var(--silver)]" />, name: "Nemotron", role: "Does the agent's scoring" },
-  { logo: <NebiusLogo className="h-6 w-auto" />, name: "Token Factory", role: "Runs the models and the code sandboxes" },
+  { logo: <NvidiaLogo className="h-6 w-auto text-[var(--silver)]" />, name: "Nemotron", role: "Runs every model the agent uses" },
+  { logo: <NebiusLogo className="h-6 w-auto" />, name: "Sandboxes", role: "Builds and runs submitted code (optional)" },
   { logo: <TavilyLogo dark className="h-8 w-auto" />, role: "Reads the live web" },
 ];
 
