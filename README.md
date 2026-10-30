@@ -156,7 +156,10 @@ NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
 SUPABASE_SECRET_KEY=your_secret_key
 SUPABASE_DB_PASSWORD=your_database_password
 
-# Nebius Token Factory: every model call, and the sandboxes
+# AI models: a free NVIDIA key (build.nvidia.com) runs every model call
+NVIDIA_API_KEY=nvapi-your_key
+
+# Nebius Token Factory: sandboxes, and the models if NVIDIA_API_KEY isn't set
 NEBIUS=your_nebius_api_key
 NEBIUS_PROJECT_ID=your_nebius_project_id
 
@@ -177,7 +180,8 @@ EMAIL_REDIRECT_TO=you@your-domain.com
 | `NEXT_PUBLIC_SUPABASE_URL`<br>`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Sign-in, the database and images | Required |
 | `SUPABASE_SECRET_KEY` | The Intake API, the submission form, email sends and the demo seed script | The Intake API returns `503` and no emails go out |
 | `SUPABASE_DB_PASSWORD` | The Supabase CLI, when you run migrations | The app itself doesn't use it |
-| `NEBIUS` | Agent reviews, chat, embeddings and sandboxes | The agent and the chat can't run |
+| `NVIDIA_API_KEY` | Free. Agent reviews, chat, image descriptions and embeddings | Falls back to `NEBIUS` |
+| `NEBIUS` | Sandboxes, and the models when `NVIDIA_API_KEY` isn't set | Sandbox runs are skipped |
 | `NEBIUS_PROJECT_ID` | Sandbox runs | Sandbox runs can't start |
 | `TAVILY` | The Web scraper, the web tools of the agent and the chat, and indexing linked pages | Those steps are skipped |
 | `SCRAPE_CREATORS_API_KEY` | YouTube details and transcripts | YouTube videos are reviewed without them. Vimeo and Loom don't need it. |
