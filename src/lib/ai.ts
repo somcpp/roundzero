@@ -31,12 +31,14 @@ export const providerOptions = (options: Record<string, unknown>) =>
 const pick = (envName: string, nvidia: string, nebius: string) => process.env[envName] || (isNvidia ? nvidia : nebius);
 
 /** NVIDIA Nemotron. Tool calling and streamed reasoning both work. */
-export const CHAT_MODEL_ID = pick("NEBIUS_CHAT_MODEL", "nvidia/nemotron-3-super-120b-a12b", "nvidia/nemotron-3-super-120b-a12b");
+// NVIDIA's free catalog doesn't serve Super to every account, so Ultra stands in.
+export const CHAT_MODEL_ID = pick("NEBIUS_CHAT_MODEL", "nvidia/nemotron-3-ultra-550b-a55b", "nvidia/nemotron-3-super-120b-a12b");
 export const chatModel = llm.chatModel(CHAT_MODEL_ID);
 
 /**
  * The agent's model tiers, all NVIDIA Nemotron: Lightning for a quick pass,
- * Super (the chat model) by default, Ultra for in-depth reviews.
+ * the chat model by default (Super on Nebius, Ultra on NVIDIA), Ultra for
+ * in-depth reviews.
  */
 export const TIER_MODEL_IDS: Record<ModelTier, string> = {
   quick: pick("NEBIUS_QUICK_MODEL", "nvidia/nemotron-3.5-lightning-30b-a3b", "nvidia/Nemotron-3_5-Lightning"),
@@ -78,8 +80,8 @@ export const visionModel = (tier: ModelTier) => llm.chatModel(visionModelId(tier
  * Must match extensions.vector(1024) in public.project_chunks.
  * - Nebius: Qwen3 embeddings are Matryoshka-trained, so asking for 1024 of the
  *   native 4096 dims keeps quality and lets pgvector's HNSW index them.
- * - NVIDIA: Snowflake Arctic Embed L is 1024 dims natively. NVIDIA's retrieval
- *   models need input_type ("passage" to index, "query" to search), which the
+ * - NVIDIA: Nemotron 3.5 Embed 8B is Matryoshka-trained too (4096 native), so
+ *   it's asked for 1024 the same way. NVIDIA's retrieval models need input_type ("passage" to index, "query" to search), which the
  *   AI SDK doesn't send, so a fetch wrapper adds it to the request body.
  * Switching hosts changes the vectors: re-index projects after a switch.
  */
@@ -91,16 +93,15 @@ function nvidiaEmbedder(inputType: "passage" | "query") {
     fetch: async (url, init) => {
       const body = typeof init?.body === "string" ? JSON.parse(init.body) : null;
       if (!body) return fetch(url, init);
-      delete body.dimensions;
       return fetch(url, { ...init, body: JSON.stringify({ ...body, input_type: inputType, truncate: "END" }) });
     },
   });
-  return provider.embeddingModel("snowflake/arctic-embed-l");
+  return provider.embeddingModel("nvidia/nemotron-3.5-embed-8b");
 }
 
 const passageModel = isNvidia ? nvidiaEmbedder("passage") : llm.embeddingModel("Qwen/Qwen3-Embedding-8B");
 const queryModel = isNvidia ? nvidiaEmbedder("query") : passageModel;
-const embeddingOptions = isNvidia ? {} : providerOptions({ dimensions: EMBEDDING_DIMENSIONS });
+const embeddingOptions = providerOptions({ dimensions: EMBEDDING_DIMENSIONS });
 
 export async function embedTexts(values: string[]): Promise<number[][]> {
   if (values.length === 0) return [];

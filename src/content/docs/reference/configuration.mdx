@@ -83,7 +83,7 @@ The agent, the judging chat, image descriptions and search embeddings run on an 
 | `NVIDIA_API_KEY` | None | Free key from [build.nvidia.com](https://build.nvidia.com) (Generate API Key). Runs agent reviews, chat, image descriptions and embeddings. Takes priority over `NEBIUS` for models. |
 | `NEBIUS` | None | Nebius Token Factory API key. Needed for sandboxes, and for the models when `NVIDIA_API_KEY` isn't set. |
 | `NEBIUS_PROJECT_ID` | None | The Nebius project that sandboxes run in. `NEBIUS_AI_PROJECT` works as a fallback name. Without it, sandbox runs can't start. |
-| `NEBIUS_CHAT_MODEL` | `nvidia/nemotron-3-super-120b-a12b` | The chat model, and the agent's **Balanced** tier. |
+| `NEBIUS_CHAT_MODEL` | `nvidia/nemotron-3-ultra-550b-a55b` / `nvidia/nemotron-3-super-120b-a12b` | The chat model, and the agent's **Balanced** tier. |
 | `NEBIUS_QUICK_MODEL` | `nvidia/nemotron-3.5-lightning-30b-a3b` / `nvidia/Nemotron-3_5-Lightning` | The **Quick** tier, and the chat's **Fast** option. |
 | `NEBIUS_DEEP_MODEL` | `nvidia/nemotron-3-ultra-550b-a55b` / `nvidia/Nemotron-3-Ultra-550b-a55b` | The **In-depth** tier. |
 | `NEBIUS_VISION_MODEL` | `nvidia/nemotron-3.5-super-vl-120b-a12b` / `deepseek-ai/DeepSeek-V4.1-Flash` | Describes images for the Balanced and In-depth tiers. |
@@ -92,7 +92,7 @@ The agent, the judging chat, image descriptions and search embeddings run on an 
 | `NEBIUS_SANDBOX_IMAGE` | `node:22-bookworm`, imported once | The image repos are cloned onto: an image UUID, a tag, or a `docker://` reference to import. |
 | `AGENT_WORKER_BUDGET_MS` | `1500000` (25 minutes) | How long one agent worker keeps claiming queued reviews. |
 
-The embedding model is fixed in code because it must match the database's 1,024-dimension vector column: `snowflake/arctic-embed-l` on NVIDIA, `Qwen/Qwen3-Embedding-8B` on Nebius. If you switch hosts, re-index projects so chat search compares like with like.
+The embedding model is fixed in code because it must match the database's 1,024-dimension vector column: `nvidia/nemotron-3.5-embed-8b` on NVIDIA, `Qwen/Qwen3-Embedding-8B` on Nebius. If you switch hosts, re-index projects so chat search compares like with like.
 
 ### Web, video and code
 
