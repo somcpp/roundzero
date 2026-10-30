@@ -1,6 +1,6 @@
 import { generateText, isStepCount, Output, type ToolSet } from "ai";
 import { z } from "zod";
-import { tierModel, TIER_MODEL_IDS } from "@/lib/ai";
+import { providerOptions, tierModel, TIER_MODEL_IDS } from "@/lib/ai";
 import type { Criterion, ModelTier } from "@/lib/data";
 import { clip } from "./fetch";
 import type { StepRecorder } from "./recorder";
@@ -171,7 +171,7 @@ export function verdictPrompt(input: JudgeInput) {
 
 /** The quick tier skips Nemotron's thinking: a fraction of the time, for a first pass. */
 const thinking = (tier: ModelTier) =>
-  tier === "quick" ? { providerOptions: { nebius: { chat_template_kwargs: { enable_thinking: false } } } } : {};
+  tier === "quick" ? { providerOptions: providerOptions({ chat_template_kwargs: { enable_thinking: false } }) } : {};
 
 /** Tool calls an investigation may make, by tier. */
 export const TOOL_BUDGET: Record<ModelTier, number> = { quick: 0, balanced: 6, deep: 10 };
