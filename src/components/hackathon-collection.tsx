@@ -70,7 +70,7 @@ export function HackathonCollection({ hackathons, demo = false }: { hackathons: 
   );
 }
 
-/** For the demo account: this instance won't make it a hackathon, but its own copy of RoundZero will. */
+/** For the demo account: it can only look, so point it at getting an organizer account. */
 function SelfHost() {
   return (
     <div className="mb-10 flex flex-wrap items-center gap-5 rounded-2xl border-2 border-dashed border-border-secondary bg-surface px-6 py-5">
@@ -80,16 +80,13 @@ function SelfHost() {
       <div className="flex min-w-60 flex-1 flex-col gap-1">
         <h2 className="text-lg leading-tight">Run your own hackathons</h2>
         <p className="text-sm text-muted">
-          The demo can&apos;t create hackathons. RoundZero is self-hosted: deploy it with your own Supabase project, then
-          create as many as you like.
+          The demo can&apos;t create hackathons. Ask the RoundZero team for an organizer account, then create as
+          many as you like.
         </p>
       </div>
       <div className="flex flex-wrap gap-2">
         {/* New tabs, so the demo stays open behind them. */}
-        <ButtonLink href="/docs/reference/deployment" target="_blank" rel="noreferrer">
-          Self-hosting guide <PixelIcon name="external" size={12} />
-        </ButtonLink>
-        <ButtonLink href="/docs" target="_blank" rel="noreferrer" variant="secondary">
+        <ButtonLink href="/docs" target="_blank" rel="noreferrer">
           Read the docs <PixelIcon name="external" size={12} />
         </ButtonLink>
       </div>

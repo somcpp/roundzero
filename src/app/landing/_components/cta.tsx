@@ -1,25 +1,15 @@
 import Link from "next/link";
 import { PixelIcon } from "@/components/pixel-icon";
 import { DEMO_MODE } from "@/lib/demo";
-import { GithubLogo } from "./brand-logos";
-import { GITHUB_REPO } from "./links";
 
-/** The page's one primary action: the repo on GitHub, or the deployment guide until the repo is public. */
+/** The page's one primary action: organizers sign in and start running hackathons. */
 export function GetStarted({ small = false, className = "" }: { small?: boolean; className?: string }) {
   const classes = `btn-arcade ${small ? "btn-arcade--sm" : ""} ${className}`.trim();
-  if (!GITHUB_REPO) {
-    return (
-      <Link href="/docs/reference/deployment" className={classes}>
-        Get started
-        <PixelIcon name="arrow-right" size={small ? 11 : 13} />
-      </Link>
-    );
-  }
   return (
-    <a href={GITHUB_REPO} target="_blank" rel="noreferrer" className={classes}>
-      <GithubLogo className={small ? "size-3.5" : "size-4"} />
+    <Link href="/login" className={classes}>
       Get started
-    </a>
+      <PixelIcon name="arrow-right" size={small ? 11 : 13} />
+    </Link>
   );
 }
 

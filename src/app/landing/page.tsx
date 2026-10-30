@@ -9,11 +9,10 @@ import type { IconName } from "@/lib/data";
 import { DEMO_MODE } from "@/lib/demo";
 import { NebiusLogo, NvidiaLogo, TavilyLogo } from "./_components/brand-logos";
 import { GetStarted, TryDemo } from "./_components/cta";
-import { GITHUB_REPO } from "./_components/links";
 import { AiOnlyJudge, JudgeQueue, RankingTable, SubmissionFlood, Tag } from "./_components/mocks";
 import { PixelDither } from "./_components/pixel-dither";
 import { ScreenTour, type Shot } from "./_components/screen-tour";
-import { CodeWindow, IconRow, Reveal, Section, Showcase } from "./_components/section";
+import { IconRow, Reveal, Section, Showcase } from "./_components/section";
 import { SiteHeader } from "./_components/site-header";
 
 // The marketing page. Only served on the site hosts (lib/site.ts):
@@ -33,7 +32,6 @@ export default function LandingPage() {
         <Demo />
         <Judges />
         <Rounds />
-        <SelfHost />
       </main>
       <Finale />
     </div>
@@ -73,7 +71,7 @@ function Hero() {
             <span className="text-sunset hero-glow">Agent &amp; Management</span>
           </h1>
           <p className="reveal reveal-delay-1 mx-auto mt-7 max-w-2xl text-lg leading-relaxed text-pretty text-white text-shadow-md text-shadow-purple-950/70 sm:text-xl">
-            Collect submissions, run judging rounds and announce winners from one app you deploy for your org. The {brand.name}{" "}
+            Collect submissions, run judging rounds and announce winners, all in one place. The {brand.name}{" "}
             agent, built on NVIDIA Nemotron and Nebius, checks each project&rsquo;s code and demo against your rules, so your judges can
             spend their time on the ideas.
           </p>
@@ -679,59 +677,6 @@ function Rounds() {
   );
 }
 
-// ── Self-hosting ──────────────────────────────────────────────────────────
-
-const BRANDING_SNIPPET = `// branding.config.js
-const branding = {
-  name: "Acme Hacks",
-  badge: "AH",
-  logo: "/logo.svg",
-  color: "#ff5a1f",
-};
-
-// .env.local: models for the Quick, Balanced (and chat) and In-depth tiers
-NEBIUS_QUICK_MODEL="nvidia/Nemotron-3_5-Lightning"
-NEBIUS_CHAT_MODEL="nvidia/nemotron-3-super-120b-a12b"
-NEBIUS_DEEP_MODEL="nvidia/Nemotron-3-Ultra-550b-a55b"`;
-
-function SelfHost() {
-  return (
-    <Section
-      id="self-host"
-      headline="Self-host it for your whole org"
-      subheadline={`${brand.name} is a Next.js app on Supabase. Everyone in your org can run hackathons on one deploy, and each organizer sees only their own.`}
-    >
-      <Reveal delay={0.05} className="mt-12 grid items-center gap-10 lg:grid-cols-2">
-        <div className="flex flex-col gap-8">
-          <ul className="m-0 flex list-none flex-col gap-5 p-0">
-            <IconRow icon={<PixelIcon name="code" size={13} />} title="Your deploy">
-              You need a Supabase project and a Node host such as Vercel, plus a Nebius Token Factory key for the agent and a Nebius
-              project ID for its code sandboxes. Tavily and email are optional.
-            </IconRow>
-            <IconRow icon={<PixelIcon name="lock" size={13} />} title="Your database">
-              Submissions and scores stay in your own Supabase database.
-            </IconRow>
-            <IconRow icon={<PixelIcon name="paint-brush" size={13} />} title="Your brand">
-              One config file puts your name, logo and color on the whole app. Each hackathon adds its own logo and color to its
-              submission form, judge portal and winners page.
-            </IconRow>
-            <IconRow icon={<PixelIcon name="gear" size={13} />} title="Your models">
-              Swap the model behind any tier with one environment variable.
-            </IconRow>
-          </ul>
-          <div>
-            <Link href="/docs/reference/deployment" className="btn-arcade btn-arcade--light btn-arcade--sm">
-              Deployment guide
-              <PixelIcon name="arrow-right" size={11} />
-            </Link>
-          </div>
-        </div>
-        <CodeWindow code={BRANDING_SNIPPET} />
-      </Reveal>
-    </Section>
-  );
-}
-
 // ── Final call and footer, on the neon floor ──────────────────────────────
 
 function Finale() {
@@ -745,19 +690,16 @@ function Finale() {
       <section className="relative mx-auto max-w-4xl px-6 pt-[12rem] pb-28 text-center sm:pt-[14rem]">
         <Reveal>
           <h2 className="m-0 text-4xl leading-[1.05] text-balance text-white sm:text-6xl">
-            Host your <span className="text-sunset">next hackathon</span> on {brand.name}
+            Run your <span className="text-sunset">next hackathon</span> on {brand.name}
           </h2>
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-white/85">
-            {GITHUB_REPO ? "Clone the repo from GitHub, deploy it with the deployment guide, then" : "Deploy it with the deployment guide, then"}{" "}
-            set up your first hackathon with your own brand and rubric.
+            Sign in and set up your first hackathon with your own brand and rubric, or look around the demo first.
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
             <GetStarted />
-            {/* Until the repo is public, Get started already opens the deployment guide. */}
-            {GITHUB_REPO ? (
-              <Link href="/docs/reference/deployment" className="btn-arcade btn-arcade--light">
-                Deployment guide
-              </Link>
+            {/* With the demo login on, the demo takes the second button. */}
+            {DEMO_MODE ? (
+              <TryDemo />
             ) : (
               <Link href="/docs" className="btn-arcade btn-arcade--light">
                 Read the docs

@@ -6,8 +6,8 @@ import "./landing.css";
 // Only reachable on the RoundZero site hosts (lib/site.ts): the proxy rewrites
 // "/" here for signed-out visitors. The .landing wrapper scopes landing.css.
 
-const title = `${brand.name} · Self-hosted hackathon judging and management`;
-const description = `Self-hosted hackathon judging and management. The ${brand.name} agent, built on NVIDIA Nemotron and Nebius, checks every project so your judges can score the ideas.`;
+const title = `${brand.name} · AI-assisted hackathon judging and management`;
+const description = `Hackathon judging and management. The ${brand.name} agent, built on NVIDIA Nemotron and Nebius, checks every project so your judges can score the ideas.`;
 
 // Setting openGraph/twitter here replaces the root layout's, share image
 // included, so point back at the root opengraph-image.png / twitter-image.png.

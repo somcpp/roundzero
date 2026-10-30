@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { BrandMark } from "@/components/brand-mark";
-import { Panel, TextLink } from "@/components/ui";
+import { Panel } from "@/components/ui";
 import { brand } from "@/lib/branding";
 import { DEMO_LOGIN, DEMO_MODE } from "@/lib/demo";
 import { LoginForm } from "./login-form";
@@ -24,18 +24,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
           <LoginForm next={typeof next === "string" ? next : undefined} demo={DEMO_MODE ? DEMO_LOGIN : undefined} />
         </Panel>
         <p className="text-center text-[15px] text-muted">
-          {DEMO_MODE ? (
-            <>
-              Want your own?{" "}
-              <TextLink href="/docs/reference/deployment" target="_blank" rel="noreferrer">
-                Self-host {brand.name}
-              </TextLink>
-            </>
-          ) : (
-            <>
-              No account? <TextLink href="/signup">Sign up</TextLink>
-            </>
-          )}
+          Running a hackathon? Ask the {brand.name} team for an organizer account.
         </p>
       </div>
     </main>

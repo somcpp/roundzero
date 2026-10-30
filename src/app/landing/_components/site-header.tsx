@@ -7,7 +7,6 @@ const NAV = [
   { href: "#why-hackathons", label: "Why hackathons" },
   { href: "#split", label: "How it works" },
   { href: "#stack", label: "Stack" },
-  { href: "#self-host", label: "Self-host" },
   { href: "/docs", label: "Docs" },
 ];
 

@@ -19,4 +19,4 @@ export const DEMO_LOGIN = {
 };
 
 /** Why a control is off for the demo account. */
-export const DEMO_READ_ONLY = "This is a demo, so changes aren't saved. Self-host RoundZero to run your own.";
+export const DEMO_READ_ONLY = "This is a demo, so changes aren't saved. Ask the RoundZero team for an organizer account to run your own.";
