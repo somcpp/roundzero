@@ -59,13 +59,15 @@ function ownerEmail() {
   return (arg || process.env.DEMO_OWNER_EMAIL || DEFAULT_OWNER).trim().toLowerCase();
 }
 
-// The agent's models as lib/ai.ts picks them, with the same env overrides.
+// The agent's models as lib/ai.ts picks them, with the same env overrides:
+// NVIDIA's catalog ids when NVIDIA_API_KEY is set, else Nebius's.
+const NVIDIA = Boolean(process.env.NVIDIA_API_KEY);
 const MODEL = {
-  quick: process.env.NEBIUS_QUICK_MODEL || "nvidia/Nemotron-3_5-Lightning",
-  balanced: process.env.NEBIUS_CHAT_MODEL || "nvidia/nemotron-3-super-120b-a12b",
-  deep: process.env.NEBIUS_DEEP_MODEL || "nvidia/Nemotron-3-Ultra-550b-a55b",
+  quick: process.env.NEBIUS_QUICK_MODEL || (NVIDIA ? "nvidia/nemotron-3.5-lightning-30b-a3b" : "nvidia/Nemotron-3_5-Lightning"),
+  balanced: process.env.NEBIUS_CHAT_MODEL || (NVIDIA ? "nvidia/nemotron-3-ultra-550b-a55b" : "nvidia/nemotron-3-super-120b-a12b"),
+  deep: process.env.NEBIUS_DEEP_MODEL || (NVIDIA ? "nvidia/nemotron-3-ultra-550b-a55b" : "nvidia/Nemotron-3-Ultra-550b-a55b"),
 };
-const VISION_MODEL = process.env.NEBIUS_VISION_MODEL || "deepseek-ai/DeepSeek-V4.1-Flash";
+const VISION_MODEL = process.env.NEBIUS_VISION_MODEL || (NVIDIA ? "nvidia/nemotron-3.5-super-vl-120b-a12b" : "deepseek-ai/DeepSeek-V4.1-Flash");
 /** A double check runs one tier up (lib/ai.ts checkTier). */
 const checkTier = (tier) => (tier === "quick" ? "balanced" : "deep");
 
