@@ -1,0 +1,597 @@
+/*
+ * The landing page's own look: clean and white, with the dusk purples and
+ * sunset gradient of the retro hero. Everything is scoped under .landing
+ * (set in ./layout.tsx) so none of it leaks into the app, which shares the
+ * root layout and globals.css. Headlines use Geist Pixel; body copy stays
+ * Geist Sans / Mono.
+ */
+
+.landing {
+  --screen: #ffffff;
+  --screen-deep: #150c2e;
+  --tint: rgba(109, 40, 217, 0.045);
+  --tint-strong: rgba(109, 40, 217, 0.09);
+  --line: rgba(46, 22, 88, 0.2);
+  --line-soft: rgba(46, 22, 88, 0.1);
+  --silver: #1d1433;
+  /* Shadows HeroUI's --muted inside the landing page only. */
+  --muted: #564b70;
+  --faint: #6e6488;
+  --on-dark: #f7f2ff;
+  --on-dark-muted: #b9abd9;
+  --violet: #7c3aed;
+  --violet-soft: #ede5ff;
+  --magenta: #e8318f;
+  --orange: #fb7a3c;
+  --pass: #067a50;
+  --pass-soft: #dcf7ec;
+  --warn: #c2410c;
+  --warn-soft: #ffedd5;
+  --sunset: linear-gradient(180deg, #fcd34d 0%, #fb923c 38%, #f43f5e 70%, #e11d8f 100%);
+  --dusk: linear-gradient(95deg, #7c3aed 0%, #d946ef 45%, #fb7a3c 100%);
+
+  background: var(--screen);
+  color: var(--silver);
+  font-family: var(--font-geist-sans), sans-serif;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  /* Own stacking context, so the page's z-indexes (sticky header, hero card,
+     dither seam) stay inside .landing. */
+  isolation: isolate;
+}
+
+html:has(.landing) {
+  scroll-behavior: smooth;
+}
+
+/* The app's base layer sets every heading in Geist Pixel with tight tracking.
+   Reset that here, in the same layer, so utility classes still win. */
+@layer base {
+  .landing :is(h1, h2, h3, h4, h5, h6) {
+    font-family: inherit;
+    font-weight: inherit;
+    letter-spacing: normal;
+  }
+
+  .landing h3 {
+    font-weight: 500;
+  }
+}
+
+/* Geist Pixel ships a single weight — reserve it for headlines. */
+.landing :is(h1, h2, .display) {
+  font-family: var(--font-geist-pixel-square), var(--font-geist-sans), sans-serif;
+  font-weight: 500;
+}
+
+.landing ::selection {
+  background: #f5d0fe;
+  color: var(--screen-deep);
+}
+
+/* ---- typography ---------------------------------------------------- */
+
+.landing .mono {
+  font-family: var(--font-geist-mono), monospace;
+}
+
+.landing .eyebrow {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--violet);
+}
+
+.landing .text-sunset {
+  background: var(--sunset);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Gradient text can't take a text-shadow (it shows through the clipped
+   glyphs), so it gets a drop-shadow filter to lift it off busy art. */
+.landing .hero-glow {
+  text-shadow: none;
+  filter: drop-shadow(0 2px 10px rgba(24, 8, 48, 0.85)) drop-shadow(0 0 2px rgba(24, 8, 48, 0.6));
+}
+
+.landing .text-dusk {
+  background: var(--dusk);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- chrome -------------------------------------------------------- */
+
+.landing .nav-link {
+  position: relative;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.landing .nav-link:hover {
+  color: var(--violet);
+}
+
+.landing .nav-link::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -3px;
+  left: 0;
+  height: 2px;
+  background: var(--dusk);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s ease;
+}
+
+.landing .nav-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* The floating nav is a dark bar, so its links light up instead. */
+.landing .nav-dark .nav-link:hover {
+  color: var(--on-dark);
+}
+
+.landing .btn-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.6rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Narrow screens: step the pills down a notch so long labels stay one line. */
+@media (max-width: 420px) {
+  .landing .btn-pill {
+    gap: 0.45rem;
+    padding: 0.75rem 1.2rem;
+    font-size: 0.875rem;
+  }
+}
+
+.landing .btn-pill--dark {
+  background: var(--screen-deep);
+  color: var(--on-dark);
+  box-shadow: 0 1px 2px rgba(21, 12, 46, 0.2);
+}
+
+.landing .btn-pill--dark:hover {
+  box-shadow: 0 10px 28px rgba(76, 29, 149, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ---- arcade buttons ------------------------------------------------ */
+
+/* Arcade buttons: a pill with a dark outline and a hard bottom edge that
+   squashes flat when pressed, like a cabinet button. The face carries the
+   retro sun's stripes. Motion steps instead of easing, like an old game. */
+.landing .btn-arcade {
+  --edge: #1d0b2e;
+  --depth: #8b1d5c;
+  --lift: 6px;
+  --glow: rgba(232, 49, 143, 0.38);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  /* Room for the bottom edge, which sits outside the box. */
+  margin: 0 0 var(--lift);
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-geist-sans), sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  color: #22091f;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 3px solid var(--edge);
+  border-radius: 9999px;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 5px, rgba(255, 255, 255, 0.24) 5px 7px),
+    linear-gradient(180deg, #fde047 0%, #fb923c 42%, #f43f5e 80%, #e11d8f 100%);
+  box-shadow:
+    0 var(--lift) 0 0 var(--depth),
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.45),
+    inset 0 -3px 0 0 rgba(122, 22, 80, 0.3),
+    0 calc(var(--lift) + 10px) 26px -8px var(--glow);
+  transition: transform 0.12s steps(2), box-shadow 0.12s steps(2), filter 0.15s ease;
+}
+
+.landing .btn-arcade:hover {
+  filter: brightness(1.06) saturate(1.12);
+  transform: translateY(-2px);
+  box-shadow:
+    0 calc(var(--lift) + 2px) 0 0 var(--depth),
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.45),
+    inset 0 -3px 0 0 rgba(122, 22, 80, 0.3),
+    0 calc(var(--lift) + 14px) 30px -8px var(--glow);
+}
+
+.landing .btn-arcade:active {
+  transform: translateY(var(--lift));
+  box-shadow: inset 0 3px 0 0 rgba(122, 22, 80, 0.25);
+}
+
+.landing .btn-arcade:focus-visible {
+  outline: 2px dashed #c026d3;
+  outline-offset: 5px;
+}
+
+/* The quieter partner: a white face with faint violet scanlines. */
+.landing .btn-arcade--light {
+  --depth: #b9a4f5;
+  --glow: rgba(76, 29, 149, 0.2);
+  color: var(--silver);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 5px, rgba(124, 58, 237, 0.07) 5px 7px),
+    #ffffff;
+}
+
+.landing .btn-arcade--light:hover,
+.landing .btn-arcade--light:active {
+  --depth: #a78bfa;
+}
+
+.landing .btn-arcade--sm {
+  --lift: 4px;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  border-width: 2px;
+}
+
+@media (max-width: 420px) {
+  .landing .btn-arcade:not(.btn-arcade--sm) {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.92rem;
+  }
+}
+
+/* ---- panels & cards ------------------------------------------------ */
+
+/* A mock of an app surface: white, a hairline border, a soft violet lift. */
+.landing .mock {
+  background: var(--screen);
+  border: 1px solid var(--line-soft);
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px rgba(46, 22, 88, 0.05), 0 18px 48px -18px rgba(76, 29, 149, 0.22);
+}
+
+.landing .tint-card {
+  background: var(--tint);
+  border-radius: 1.5rem;
+}
+
+/* Registration marks just outside the card corners, like framing guides. */
+.landing .corner-marks {
+  position: relative;
+}
+
+.landing .corner-marks::before,
+.landing .corner-marks::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(124, 58, 237, 0.4);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.landing .corner-marks::before {
+  top: -8px;
+  left: -8px;
+  border-width: 2px 0 0 2px;
+  border-top-left-radius: 12px;
+}
+
+.landing .corner-marks::after {
+  bottom: -8px;
+  right: -8px;
+  border-width: 0 2px 2px 0;
+  border-bottom-right-radius: 12px;
+}
+
+/* Quieter marks for dense areas like the code column. */
+.landing .corner-marks-soft::before,
+.landing .corner-marks-soft::after {
+  border-color: rgba(124, 58, 237, 0.2);
+}
+
+/* ---- the dark band ------------------------------------------------- */
+
+/* Night sky for the open-stack section: deep purple with a sunset glow
+   rising from the bottom edge, like the hero's horizon. */
+.landing .night {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 118%, rgba(251, 122, 60, 0.42), transparent 70%),
+    radial-gradient(ellipse 90% 70% at 50% 110%, rgba(217, 70, 239, 0.3), transparent 72%),
+    var(--screen-deep);
+  color: var(--on-dark);
+}
+
+.landing .night-card {
+  background: rgba(255, 255, 255, 0.045);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.25rem;
+  backdrop-filter: blur(6px);
+}
+
+/* Faint pixel stars, drawn with two offset dot grids. */
+.landing .stars {
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.35) 1px, transparent 1.5px),
+    radial-gradient(circle at 1px 1px, rgba(251, 191, 36, 0.25) 1px, transparent 1.5px);
+  background-size: 97px 89px, 151px 137px;
+  background-position: 13px 21px, 71px 43px;
+}
+
+/* ---- the promo TV -------------------------------------------------- */
+
+/* The promo video plays on a retro TV built from the arcade buttons' parts:
+   a dark outline, faint stripes and a hard bottom edge, on a night-purple
+   body with a sunset glow. */
+.landing .tv {
+  --edge: #1d0b2e;
+  position: relative;
+  padding: 0.75rem 0.75rem 0.625rem;
+  border: 3px solid var(--edge);
+  border-radius: 1.75rem;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 5px, rgba(255, 255, 255, 0.035) 5px 7px),
+    linear-gradient(180deg, #2e1560 0%, #1b0e3b 55%, #150c2e 100%);
+  box-shadow:
+    0 10px 0 0 #8b1d5c,
+    inset 0 3px 0 0 rgba(255, 255, 255, 0.12),
+    inset 0 -3px 0 0 rgba(0, 0, 0, 0.3),
+    0 44px 80px -28px rgba(232, 49, 143, 0.55),
+    0 26px 50px -26px rgba(124, 58, 237, 0.6);
+}
+
+@media (min-width: 640px) {
+  .landing .tv {
+    padding: 1rem 1rem 0.75rem;
+    border-radius: 2.25rem;
+  }
+}
+
+/* The tube: a thin dusk ring, then the picture with rounded CRT corners and
+   a little shade at its edges. */
+.landing .tv-screen {
+  padding: 3px;
+  border-radius: 1.1rem;
+  background: var(--dusk);
+}
+
+.landing .tv-glass {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: calc(1.1rem - 3px);
+  background: #07030f;
+}
+
+.landing .tv-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5), inset 0 0 22px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.landing .tv-grille {
+  height: 0.875rem;
+  border-radius: 9999px;
+  background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.55) 0 3px, rgba(255, 255, 255, 0.07) 3px 7px);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+/* The runtime, on an amber readout like a VCR's. */
+.landing .tv-lcd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.4rem;
+  background: #0b0618;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.07);
+  color: #fcd34d;
+  text-shadow: 0 0 6px rgba(252, 211, 77, 0.55);
+  font-size: 0.8rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+}
+
+/* Knobs in the sunset colors, with a notch to show where they're turned. */
+.landing .tv-knob {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid var(--edge);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #fde68a 0%, #fb923c 45%, #e11d8f 100%);
+  box-shadow: 0 3px 0 0 #8b1d5c, inset 0 2px 0 0 rgba(255, 255, 255, 0.45);
+}
+
+.landing .tv-knob::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: calc(50% - 1.5px);
+  width: 3px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--edge);
+}
+
+/* The thank-you badge: a white pill in a dusk ring. */
+.landing .thanks-badge {
+  border: 2px solid transparent;
+  background: linear-gradient(#fff, #fff) padding-box, var(--dusk) border-box;
+  box-shadow: 0 10px 28px -14px rgba(124, 58, 237, 0.45);
+}
+
+/* ---- code ---------------------------------------------------------- */
+
+.landing .code-window {
+  background: var(--screen-deep);
+  border: 1px solid var(--line-soft);
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.landing .code-window pre {
+  margin: 0;
+  padding: 1.4rem 1.5rem;
+  width: max-content;
+  min-width: 100%;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.8rem;
+  line-height: 1.7;
+  color: var(--on-dark);
+}
+
+/* Branded SimpleBar scrollbar inside code windows — hidden until hover. */
+.landing .code-window .simplebar-track.simplebar-horizontal {
+  height: 10px;
+  margin: 0 1.4rem 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.landing .code-window:hover .simplebar-track.simplebar-horizontal {
+  opacity: 1;
+}
+
+/* Touch screens have no hover — keep the scroll affordance visible. */
+@media (pointer: coarse) {
+  .landing .code-window .simplebar-track.simplebar-horizontal {
+    opacity: 1;
+  }
+}
+
+.landing .code-window .simplebar-track.simplebar-horizontal .simplebar-scrollbar {
+  top: 2px;
+  height: 6px;
+}
+
+.landing .code-window .simplebar-scrollbar::before {
+  inset: 0;
+  border-radius: 999px;
+  background: #d946ef;
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+.landing .code-window .simplebar-scrollbar.simplebar-hover::before,
+.landing .code-window .simplebar-dragging .simplebar-scrollbar::before {
+  opacity: 1;
+}
+
+.landing .tok-kw { color: #ff8fb8; }
+.landing .tok-str { color: #fcd34d; }
+.landing .tok-fn { color: #c4b5fd; }
+.landing .tok-cm { color: #7c6f9c; font-style: italic; }
+.landing .tok-tag { color: #fdba74; }
+.landing .tok-num { color: #f0abfc; }
+
+/* ---- motion -------------------------------------------------------- */
+
+.landing .reveal {
+  animation: landing-rise 0.5s cubic-bezier(0.22, 0.8, 0.2, 1) both;
+}
+
+.landing .reveal-delay-1 { animation-delay: 0.05s; }
+.landing .reveal-delay-2 { animation-delay: 0.1s; }
+.landing .reveal-delay-3 { animation-delay: 0.15s; }
+.landing .reveal-delay-4 { animation-delay: 0.2s; }
+
+@keyframes landing-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* The live phase's dot. */
+.landing .live-dot {
+  animation: live-dot 2.4s ease-in-out infinite;
+}
+
+@keyframes live-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* The TV's picture switches on like an old CRT, a beat after the set rises
+   into place: a line of light opens into the picture, then fades. */
+.landing .tv-power {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: #07030f;
+  animation: tv-power-cover 0.25s 0.85s both;
+}
+
+.landing .tv-power::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #fff4e6;
+  animation: tv-power-line 0.5s 0.4s both;
+}
+
+@keyframes tv-power-line {
+  0% { transform: scale(0.02, 0.01); opacity: 1; }
+  40% { transform: scale(1, 0.01); }
+  75% { transform: scale(1, 1); opacity: 0.9; }
+  100% { transform: scale(1, 1); opacity: 0; }
+}
+
+@keyframes tv-power-cover {
+  to { opacity: 0; visibility: hidden; }
+}
+
+/* Sparkles around the TV, stepping like an old game's. */
+.landing .twinkle {
+  animation: twinkle 4s steps(3) infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.landing) { scroll-behavior: auto; }
+  .landing .tv-power { display: none; }
+  .landing *,
+  .landing *::before,
+  .landing *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
