@@ -1,0 +1,33 @@
+[Tavily](https://tavily.com/) is how RoundZero reads the live web. It extracts pages as clean markdown, crawls a site by following instructions, and searches the web with a short answer on top.
+
+## Where it's used
+
+| Feature | Tavily call | What it does |
+| --- | --- | --- |
+| **Web scraper** mechanism | Extract and crawl | Reads each link in the criterion's inputs, such as the live demo. On the In-depth tier, it also crawls up to 5 more pages of the site. |
+| The agent's `readWebPage` tool | Extract | On the Balanced and In-depth tiers, with **Web scraper** or **Agent judge** on, the agent reads a page to check a claim. |
+| The agent's `searchWeb` tool | Search | Same tiers and mechanisms. Looks for prior art, or checks what a submission says about itself. |
+| [Chat](/docs/judging/chat) index | Extract | Pulls in up to three pages each project links to, such as its README and live demo, so Chat can search them. |
+| Chat's web tools | Search and extract | Reads a page or searches the web when a question needs it. |
+
+The agent treats everything it reads as data. A page that tells the agent what score to give gets a prompt-injection flag, not a higher score.
+
+## The Web scraper mechanism
+
+Add **Web scraper** to a criterion on its [Inputs tab](/docs/setup/criteria#inputs-tab). It reads the links in the criterion's inputs, such as the project's live demo, and flags any that don't load. On the In-depth tier it then crawls further into the site, steered by the criterion's agent guidance. The pages become evidence for that criterion, and the verdict cites them by URL.
+
+The default **Impact** criterion uses Web scraper alongside Agent judge, so the agent sees what the demo actually does, not only what the write-up says it does.
+
+## Set it up
+
+1. Create an API key in Tavily.
+2. Set it as `TAVILY` in `.env.local`, or in your host's environment variables in production.
+3. Restart the dev server or redeploy.
+
+Without `TAVILY`, web steps are skipped and the agent notes "TAVILY isn't set". Chat's index still covers each project's own fields, and the rest of the review runs.
+
+## Related
+
+- [Criteria › Mechanisms](/docs/setup/criteria#inputs-tab)
+- [Chat](/docs/judging/chat)
+- [Configuration › Web, video and code](/docs/reference/configuration#web-video-and-code)

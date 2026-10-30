@@ -1,0 +1,159 @@
+RoundZero is a Next.js 16 app backed by Supabase. To run your own instance, you set up a Supabase project, apply the migrations, create an organizer account, set environment variables, and deploy the app. The AI, web and email services are separate accounts you add as needed.
+
+## What you need
+
+| Service | What RoundZero uses it for | Required |
+| --- | --- | --- |
+| [Supabase](https://supabase.com) | Sign-in, the Postgres database (with pgvector), and image storage | Yes |
+| A Node.js host, such as [Vercel](https://vercel.com) | Running the Next.js app | Yes |
+| [Nebius Token Factory](https://docs.tokenfactory.nebius.com) | Every AI model (agent, chat, image descriptions, embeddings) and the sandboxes that run project code | For agent reviews and chat |
+| [Tavily](https://tavily.com) | Reading, crawling and searching the web | No |
+| ScrapeCreators | YouTube video details and transcripts | No |
+| [Resend](https://resend.com) | Sending email | No |
+
+The repo uses pnpm (`packageManager` is `pnpm@9.14.2`). The Supabase CLI is a dev dependency, so `pnpm supabase` runs it without a global install.
+
+## Set up Supabase
+
+<Steps>
+
+### Create a project
+
+Create a project in the [Supabase dashboard](https://supabase.com/dashboard). Note its project URL and its publishable and secret keys from **Project Settings → API Keys**, and the database password you chose.
+
+### Apply the migrations
+
+From the repo root, link the CLI to your project and push the migrations in `supabase/migrations`:
+
+```bash
+pnpm install
+pnpm supabase login
+pnpm supabase link --project-ref your-project-ref
+pnpm supabase db push
+```
+
+The CLI asks for the database password, or reads it from `SUPABASE_DB_PASSWORD`. Run `pnpm supabase db push` again whenever you pull new migrations.
+
+### Create the first organizer
+
+RoundZero has no public sign-up. In the dashboard, open **Authentication → Users**, click **Add user**, then **Create new user**. Enter an email and password and leave **Auto Confirm User** checked. See [Add an organizer](/docs/workspace/account#add-an-organizer).
+
+### Turn off public sign-ups
+
+In **Authentication → Sign In / Providers**, switch off **Allow new users to sign up**. Otherwise anyone can create an account through the Supabase API.
+
+</Steps>
+
+### What the migrations create
+
+- Every table the app uses, with row-level security. Organizers can only read and change hackathons they own. The [demo login](/docs/reference/configuration#demo-login) can read the hackathons marked as demos, and change nothing.
+- Database functions for judging: starting and closing phases, ranking, intake, and the public winners page.
+- Triggers that give each new hackathon its [default setup](/docs/workspace/new-hackathon#what-a-new-hackathon-starts-with).
+- The `vector` extension, for the chat's project search.
+- Four public storage buckets: `judge-images`, `hackathon-logos`, `hackathon-banners` and `reward-images`. They're public so photos, logos, banners and prize images show on judge links, winners pages and emails.
+
+## Set environment variables
+
+Create `.env.local` for local development, or add the same variables in your host's settings. Replace the placeholders with your own values:
+
+```dotenv
+# Supabase (required)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-ref.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+SUPABASE_SECRET_KEY=your_secret_key
+SUPABASE_DB_PASSWORD=your_database_password
+
+# AI models and sandboxes
+NEBIUS=your_nebius_api_key
+NEBIUS_PROJECT_ID=your_nebius_project_id
+
+# Web and video
+TAVILY=your_tavily_api_key
+SCRAPE_CREATORS_API_KEY=your_scrapecreators_api_key
+
+# Email
+RESEND=your_resend_api_key
+FROM_EMAIL=judging@your-domain.com
+APP_URL=https://roundzero.example.com
+```
+
+[Configuration](/docs/reference/configuration#environment-variables) lists every variable, its default, and what stops working without it.
+
+## Run it locally
+
+```bash
+pnpm dev
+```
+
+The app starts on `http://localhost:3000` unless you set another port. Sign in with the organizer account you created.
+
+## Deploy the app
+
+Build and start it on any Node.js host:
+
+```bash
+pnpm build
+pnpm start
+```
+
+On Vercel, import the repository, add the environment variables, and deploy. Set `APP_URL` to your production origin so links in emails point to the right place. Without it, email links use Vercel's production URL.
+
+### Long-running work
+
+- **Agent reviews** run in the background after the request that starts them returns. The pages that start them allow up to 800 seconds (`maxDuration = 800`), and the chat endpoint allows 120. One agent worker keeps claiming queued reviews for up to 25 minutes (`AGENT_WORKER_BUDGET_MS`). On Vercel, the function's duration limit cuts that short, and unfinished reviews are picked up the next time the agent runs.
+- **Emails** run as durable workflows through the `workflow` package (Workflow DevKit), wired in by `withWorkflow` in `next.config.ts`. A phase's run sends judge invites, daily batch reminders and a last call, and notifies the organizer. Results runs send winner and thank-you emails. Its endpoints live under `/.well-known/workflow/`, and the auth proxy skips them. Local runs keep their state in `.workflow-data/`.
+
+### Keep Supabase awake
+
+Supabase pauses a Free-plan project after a week without database activity. `vercel.json` schedules a [Vercel cron job](https://vercel.com/docs/cron-jobs) that calls `/api/cron/keep-alive` every 6 hours. Each run reads from the database, Auth and Storage. If Supabase still doesn't answer after two retries, the route emails `ALERT_EMAIL` a link to the project's dashboard. A paused project answers every request with HTTP 540, and the email then says to restore it.
+
+Set `CRON_SECRET` on Vercel so only Vercel's cron can call the route. To run it by hand, open **Settings › Cron Jobs** in the Vercel project and click **Run**. Vercel Hobby only allows daily cron jobs, so there, replace the schedule with a few daily ones such as `0 4 * * *` and `0 16 * * *`. On another host, call the route from any scheduler with `Authorization: Bearer` followed by the `CRON_SECRET` value.
+
+### Sign-in on every request
+
+`src/proxy.ts` runs on every request except static files. It refreshes the Supabase session, sends signed-out visitors on organizer pages to `/login`, and serves the landing page on site hosts. See [Landing page and site hosts](/docs/reference/configuration#landing-page-and-site-hosts). A self-hosted instance doesn't need `SITE_HOSTS`.
+
+## External services
+
+### Nebius Token Factory
+
+RoundZero calls Nebius through its OpenAI-compatible API at `https://api.tokenfactory.nebius.com/v1`, with the `NEBIUS` key. It uses:
+
+- NVIDIA Nemotron chat models for the agent's three tiers and the judging chat.
+- Vision models that describe screenshots and video frames for the agent.
+- `Qwen/Qwen3-Embedding-8B` to embed projects for the chat's search.
+- Nebius Sandboxes to clone and run project repos for the **Sandbox run** mechanism. Sandboxes also need `NEBIUS_PROJECT_ID`. The first run imports `node:22-bookworm` and tags it, and later runs reuse that image.
+
+Model names can be changed with environment variables. See [AI models and sandboxes](/docs/reference/configuration#ai-models-and-sandboxes).
+
+### Tavily
+
+With `TAVILY` set, the agent reads and crawls demo sites for the **Web scraper** mechanism, searches the web while it investigates, and fetches pages that projects link to for the chat's search.
+
+### ScrapeCreators
+
+With `SCRAPE_CREATORS_API_KEY` set, the agent loads a YouTube demo's details and transcript. Vimeo and Loom videos are read without it.
+
+### GitHub
+
+The agent downloads public repos from their host and reads them in memory. For GitHub repos it also lists recent commits through the GitHub API, sending `GITHUB_TOKEN` when it's set.
+
+### Resend
+
+With `RESEND` and `FROM_EMAIL` set, RoundZero sends judge invites and reminders, organizer notices, and winner and thank-you emails. `FROM_EMAIL` must be on a domain you've verified in Resend. Each email is recorded in the database and keyed so that a retry never sends it twice. Set `EMAIL_REDIRECT_TO` while testing to send every email to yourself.
+
+## Check the deployment
+
+1. Sign in and open **Settings** from the account menu. The Supabase URL and keys under **Environment** should read "set". `SUPABASE_DB_PASSWORD` only matters where you run migrations.
+2. Create a hackathon, then open Judging › **Projects** and click **API**. If the drawer warns "This server can't take outside submissions yet", `SUPABASE_SECRET_KEY` is missing or wrong.
+3. On Judging › **Progress**, click **Add sample data**, then **Start judging**. With **Agent first** on, the default, the agent starts reviewing the sample projects.
+4. When you're done testing, click **Reset judging** on Progress, or delete the hackathon from Setup › General.
+
+## Related
+
+<Cards>
+  <Card href="/docs/reference/configuration" title="Configuration" icon="gear">Every variable and branding option.</Card>
+  <Card href="/docs/workspace/account" title="Sign in and settings" icon="user">Organizer accounts and the Settings page.</Card>
+  <Card href="/docs/reference/intake-api" title="Intake API" icon="inbox">Import projects once it's running.</Card>
+  <Card href="/docs/quickstart" title="Quickstart" icon="play">Run your first hackathon.</Card>
+</Cards>

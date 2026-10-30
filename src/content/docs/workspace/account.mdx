@@ -1,0 +1,97 @@
+<PageInfo path="/login" access="public" nav="Any organizer page, while signed out" />
+
+Organizers are the only people with RoundZero accounts. They sign in with an email and password, handled by Supabase Auth. Judges, submitters and visitors to the winners page use links and never sign in.
+
+This page covers signing in, how organizer accounts are created, the account menu, and the read-only **Settings** page.
+
+## Organizer accounts
+
+RoundZero has no public sign-up for organizers. Someone with access to your Supabase project creates each organizer account by hand. See [Add an organizer](#add-an-organizer). An instance can also offer a shared [demo login](#demo-login).
+
+Each hackathon belongs to the organizer who created it. Organizers on the same instance don't see or edit each other's hackathons.
+
+## Sign in
+
+The sign-in screen reads **Sign in to RoundZero** (with your instance's name) and "Admin access only.", or "Try the demo, or sign in as an admin." when the [demo login](#demo-login) is on. Enter your **Email** and **Password**, then click **Sign in**.
+
+- If either field is empty, you see "Enter your email and password." A wrong email or password shows the message from Supabase.
+- After signing in, you land on the page you were trying to open, or on [Your hackathons](/docs/workspace/hackathons).
+- If you're already signed in, `/login` sends you to Your hackathons.
+
+### Pages that need an account
+
+Opening any organizer page while signed out sends you to `/login` and back again after you sign in. These paths stay open without an account:
+
+| Path | What it is |
+| --- | --- |
+| `/login`, `/signup` | Sign in, and how to get an account |
+| `/docs` | This documentation |
+| `/j/[token]` | A judge's private page |
+| `/f/[token]` | A public submission form |
+| `/w/[slug]` | A hackathon's winners page |
+| `/api/intake` | The Intake API, which checks its own key |
+| `/landing` | The marketing landing page. See [Configuration](/docs/reference/configuration#landing-page-and-site-hosts). |
+
+## Add an organizer
+
+<PageInfo path="/signup" access="public" nav="Sign in › Sign up" />
+
+The **Sign up** link under the sign-in form opens a page titled **Admins are added by hand**. It lists the steps to create an account in the Supabase dashboard:
+
+1. Open **Authentication → Users** in your Supabase project.
+2. Click **Add user**, then **Create new user**.
+3. Enter the organizer's email and a password. Leave **Auto Confirm User** checked so they can sign in right away without a confirmation email.
+4. Send them the password over a private channel. They sign in at `/login`.
+
+The page links straight to your project's dashboard, using the project in `NEXT_PUBLIC_SUPABASE_URL`.
+
+<Callout type="warning" title="Turn off public sign-ups">
+
+In the Supabase dashboard, go to **Authentication → Sign In / Providers** and switch off **Allow new users to sign up**. Until you do, anyone can create an account through the Supabase API. Accounts you create by hand still work.
+
+</Callout>
+
+## Demo login
+
+When `DEMO_MODE=true` is set (see [Configuration](/docs/reference/configuration#demo-login)), the sign-in form comes filled in with a shared demo login and says so. Visitors, such as hackathon judges trying RoundZero, just click **Sign in**. An admin clears the fields and signs in as usual.
+
+The demo account can try anything, but nothing it does is saved:
+
+- The home page reads **Demo hackathons** and lists only the hackathons marked as demos, never anyone's real ones. **New hackathon** is off, and a panel points to self-hosting instead.
+- Every page, tab, drawer and preview opens, under a banner saying nothing is saved. Fields, toggles and drafts work on screen, and editors say "Demo: changes aren't saved" in place of "Unsaved changes".
+- Anything that would save is off: Update and Save, delete and remove, run, publish, email, upload and moving projects. Chat shows the demo's saved chats but doesn't take new questions, since each one runs the model.
+- The database refuses the demo account's writes too, so nothing changes even if a request gets past the page.
+
+The account menu shows "Demo account · nothing is saved" under the name.
+
+## Account menu
+
+On Your hackathons, New hackathon and Settings, your avatar sits at the top right. Click it to open the account menu. It shows your display name and email, and has two items:
+
+- **Settings** opens the instance settings page.
+- **Sign out** ends your session and returns you to `/login`.
+
+The display name comes from the `display_name` field of your Supabase user metadata. Without one, the menu shows your email.
+
+## Settings
+
+<PageInfo path="/settings" access="organizer" nav="Account menu › Settings" />
+
+**Settings** shows how this instance is configured. It's read-only: settings live in code and the environment, so you change them there and restart or redeploy.
+
+| Section | What it shows |
+| --- | --- |
+| **Branding** | The current `name`, `badge`, `logo` and `color` from `branding.config.js`, and the preset colors. |
+| **Environment** | Whether `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` and `SUPABASE_DB_PASSWORD` are set, and whether `DEMO_MODE` is on. It shows the Supabase URL itself, and only "set" or "not set" for the keys. |
+| **Database** | The command that applies the migrations, `pnpm supabase db push`, and the public storage buckets for photos, logos and prize images. |
+| **Admins** | A reminder that accounts are managed in Supabase Auth, with a link to the sign-up steps. |
+
+The page doesn't cover the AI, email or landing page variables. For the full list, see [Configuration](/docs/reference/configuration).
+
+## Related
+
+<Cards>
+  <Card href="/docs/reference/configuration" title="Configuration" icon="gear">branding.config.js and every environment variable.</Card>
+  <Card href="/docs/reference/deployment" title="Deployment" icon="code">Set up Supabase and deploy the app.</Card>
+  <Card href="/docs/workspace/hackathons" title="Your hackathons" icon="grid">Where you land after signing in.</Card>
+</Cards>

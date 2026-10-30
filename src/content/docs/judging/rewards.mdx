@@ -1,0 +1,86 @@
+<PageInfo path="/h/[slug]/judging/rewards" access="organizer" nav="Judging › Rewards" />
+
+Rewards is where you set up what can be won and what teams hear when results are out. You define prize tiers, each one a place range or an award, and the prizes inside them. You also write two emails: one for winners and one for everyone else. Nothing here locks when judging starts, so you can set rewards up at any point.
+
+The page has three tabs: **Prizes**, **Winner email** and **Thank-you email**. A dot on a tab means it has unsaved changes. Each tab saves on its own with **Update** in the page header. The open tab is kept in the address, so a reload or a shared link opens on it.
+
+## Prize tiers
+
+The **Prizes** tab lists your reward tiers. Each row shows the tier's image, name, prizes and who wins it, such as `Rank 1`, `Top 3`, `Ranks 4–10`, `Award` or `Award · 2 winners`.
+
+- Click a tier to edit it in a drawer.
+- Use **add reward tier** at the bottom, or the **+** between rows, to add one.
+- Drag a tier by its handle to reorder the list.
+- Remove a tier with the trash button at the bottom of its drawer. Its prizes come out of winner emails and its image is deleted once you update.
+
+You can have up to 50 tiers. Changes apply when you click **Update**.
+
+### Details
+
+- **Prize image**: a square picture of the prize, shown on the winners page and in emails. Drop an image or click to upload. It's cropped to a centered square. Without one, the tier shows a gift icon.
+- **Name**: up to 80 characters.
+- **Description** (optional): shown under the prize name in winner emails.
+
+### Winners
+
+**Who wins** decides how a tier is won:
+
+| Option | How it works |
+| --- | --- |
+| **Final rank** | Set a range of places, like ranks 1 to 3. Every project that finishes in the range gets the tier. Ranges can overlap, so a project can collect several tiers. |
+| **Award** | Winners are picked on the [Winners](/docs/results/winners) page rather than by rank. |
+
+An award has three more settings:
+
+- **How many**: from 1 to 50 winners.
+- **Picked**: **By hand**, or **Top on a criterion**. With a criterion, set **Suggested by** to that criterion. Projects with the best average judge score on it are suggested, and you still confirm the winner.
+- **Only projects without a rank prize**: stops a top-ranked project from also taking this award, so prizes spread out.
+
+Final ranks are set when the last phase closes on [Progress](/docs/judging/progress). Disqualified projects can't win awards. Neither can projects with a gate failure that stands: one the agent failed and nobody overturned, or one judges ruled out.
+
+### Prizes
+
+The **Prizes** tab in the drawer lists what each winner of the tier gets, in the order their email lists it. You can add up to 30 prizes per tier, and each one needs a label. Drag a prize by its grip to reorder, or focus the grip and use the arrow keys.
+
+| Kind | Second field |
+| --- | --- |
+| Cash, Text, Swag | None, the label is the whole prize |
+| Credits | Redeem code |
+| Code | Code |
+| Link | URL |
+| File | File URL |
+| Image | Image URL |
+
+Put a code or URL in the second field and it goes into the winner's email.
+
+## What each winner gets
+
+The panel beside the tier list sums up your tiers. It shows each place or run of places with the tiers it collects, followed by each award. Use it to check for gaps and overlaps before results come out.
+
+## Reward settings
+
+**Settings** in the page header opens rules that apply across every tier and award. It holds one rule, **One prize per team**.
+
+With it on, a person or team with several submissions wins at most one reward. Their best-placed project keeps its prize, and the next project moves up to take the place. Awards follow the rule too, so a team that already wins something can't be picked for another award.
+
+Projects count as the same team when they share a member in a Team field, ignoring case and extra spaces. Teams also link through shared members, so if A shares a member with B and B with C, all three count as one team. If your [schema](/docs/setup/schema) has no Team field, every project counts as its own team, and the drawer tells you so.
+
+Reward settings save on their own, with **Update** in the drawer.
+
+## Emails
+
+The two email tabs set what teams receive once results are out. Each tab shows a live preview beside the form, including unsaved changes. Blank fields fall back to the default text, and each tab lists the placeholders you can use for names and places.
+
+- **Winner email** goes to every winner and lists exactly what they earned across all the tiers they won. The preview shows what first place would get. If no tier covers rank 1, the preview says so.
+- **Thank-you email** goes to every project that didn't win. You can switch it off, announce the winners in it, and add a **Bonus for everyone**, such as a credits code or a discount link.
+
+To review each winner's email before it goes out, go to [Winner emails](/docs/results/emails).
+
+## Related
+
+<Cards>
+<Card href="/docs/results/winners" title="Winners" icon="crown">Final rankings, and picking award winners.</Card>
+<Card href="/docs/results/emails" title="Winner emails" icon="mail">Each winner's email, as it will be sent.</Card>
+<Card href="/docs/links/winners-page" title="Winners page" icon="globe">The public page that shows prizes and winners.</Card>
+<Card href="/docs/judging/progress" title="Progress" icon="chart-line">Close the last phase to set final ranks.</Card>
+</Cards>

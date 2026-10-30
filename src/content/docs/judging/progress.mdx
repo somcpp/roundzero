@@ -1,0 +1,112 @@
+<PageInfo path="/h/[slug]/judging/progress" access="organizer" nav="Judging › Progress, or the phase button in the top bar" />
+
+Progress is where judging starts, where you follow it while it runs, and where you close each phase. Before judging starts, it checks your setup. Once it's running, it shows how far each phase has got, which judges are behind, which agent verdicts need a person, and how projects would rank if you closed the phase now.
+
+The top bar links here too. Before judging it shows **Start judging**, and after that it shows the running phase, like `1/3 Round one`.
+
+## Before judging starts
+
+The page lists what judging will use, each with an **Edit** link to the page that sets it:
+
+- How many projects are ready. Every project in the running goes into the first phase. **Add sample data** is offered here too.
+- Your [phases](/docs/setup/phases), in order.
+- How many judges are in the first phase, and how many review each project.
+- Your [criteria](/docs/setup/criteria) and whether their weights add to 100%.
+- Your [distribution](/docs/setup/distribution) settings: agent first or judges only, the split, and the cadence.
+
+A check means the item is ready, a flag is a warning, and a cross blocks you. **Start judging** needs at least one project and one phase. Missing judges or weights that don't add to 100% are warnings, not blockers.
+
+**When you start** spells out what's about to happen for your hackathon:
+
+<Steps>
+
+### Projects move into the first phase
+
+Every project in the running moves into phase one.
+
+### The agent is queued
+
+If **Agent first** is on in Distribution, an agent review is queued for each project and the agent starts working through them.
+
+### Reviews go out
+
+Each project is assigned to judges in the first phase's pool, following your distribution settings. The page shows how many reviews go out and roughly how many each judge gets.
+
+### Setup locks
+
+Schema, criteria and phases can only be renamed, distribution can't change, and judges with reviews can't be deleted. Resetting judging unlocks them.
+
+</Steps>
+
+## While judging runs
+
+### Phase funnel
+
+The funnel at the top has a column for all submitted projects, then one per phase. Each column shows how many projects reached that phase and what share of submissions that is. The running phase is marked **live**, with how much of it has been reviewed. Closed phases show how many advanced, and phases that haven't started show their planned size, faded. Hover a column to see how many projects dropped out after it.
+
+### Numbers
+
+| Stat | What it counts |
+| --- | --- |
+| **Reviews** | Judge reviews submitted in the running phase, out of those assigned. |
+| **AI reviewed** | Agent reviews finished, out of all agent reviews, with how many are running or queued and how many steps are flagged. |
+| **Gate failed** | Projects the agent failed on a gate, and who decides on them, plus projects judges ruled out on a gate in this phase. Projects judges only flagged are noted beside it. |
+| **In this phase** | Projects in the running in this phase, and how many are out of the running overall. |
+
+### Judges
+
+Each judge in the running phase's pool gets a row with a progress bar and a `done/assigned` count. **behind** marks a judge who is well behind the pool's average pace. Buttons on the right copy the judge's link or open their [judge portal](/docs/links/judge-portal).
+
+### Needs a person
+
+This list shows agent steps that are waiting on a person, because the agent wasn't sure, its double check disagreed, the step failed, or someone flagged it. Each row shows the project, the criterion, why it was flagged and the verdict. Click one to open that project's agent review, where you can settle it. See [directing a step](/docs/judging/project#directing-a-step).
+
+### Projects
+
+The table has two views:
+
+- The first view, named after the running phase, lists its projects in the running, ranked the way closing the phase will rank them. Projects that passed every gate come first, then projects are ordered by average judge score, then by agent score. A dashed line marks the cutoff, `top N advance`.
+- **All projects** lists every project by number, with its phase.
+
+The **AI review** column shows the agent's total, or **gate failed**, **Gate overturned**, a count of flagged steps, **error**, **queued** or **running**. **Reviews** and **Avg** cover the running phase. **Status** adds **ruled out** or **gate flagged** when judges failed a gate.
+
+## Actions
+
+| Button | What it does |
+| --- | --- |
+| **Run agent** | Queues an agent review for every project in the running that the agent hasn't reviewed or failed on, and picks up anything already queued. While the agent works, the button reads **Agent working · add more**. |
+| **Simulate activity** | Demo only, shown while a phase runs. Submits about a third of the running phase's open reviews with made-up scores close to the agent's. |
+| **Close phase** | Ends the running phase. Shown while a phase runs. See below. |
+| **Reset judging** | Returns the hackathon to setup. See below. |
+
+<Callout type="warning" title="Simulated scores are real data">
+
+**Simulate activity** writes judge scores into your hackathon and its audit trails. Use it only while trying things out, then reset judging.
+
+</Callout>
+
+## Close a phase
+
+Close a phase when its reviews are in. **Close phase** asks you to confirm and describes what will happen, with your numbers:
+
+- Projects that judges ruled out on a gate are eliminated first. Their audit trail notes which gates failed.
+- The top projects, up to the phase's advance count, move to the next phase and its reviews go out.
+- The rest are eliminated, with a note like `Not in the top 10 of Round one`.
+- Judges who haven't finished can't submit for the closed phase any more.
+
+When there's no next phase, closing ends judging. After projects ruled out on a gate are eliminated, the remaining projects get their final ranks and the hackathon moves to [Results](/docs/results/winners).
+
+Projects the agent failed on a gate aren't eliminated for that alone. They rank below every project that passed, unless someone overturns the failure in the [failed inbox](/docs/judging/inbox).
+
+## Reset judging
+
+**Reset judging**, at the bottom of the page, deletes every assignment, judge score and agent review, and moves every project back to no phase. Eliminated projects are reinstated, the final ranking and award winners are cleared, and the winners page is unpublished. Disqualifications and audit trails stay. Use it while trying things out, or to change setup that locked when judging started.
+
+## Related
+
+<Cards>
+<Card href="/docs/setup/phases" title="Phases" icon="calendar">Rounds, advance counts and gates.</Card>
+<Card href="/docs/setup/distribution" title="Distribution" icon="grid">How reviews are handed out to judges.</Card>
+<Card href="/docs/judging/inbox" title="Failed inbox" icon="inbox">Calls on projects the agent failed on a gate.</Card>
+<Card href="/docs/results/winners" title="Winners" icon="crown">Where you land after the last phase closes.</Card>
+</Cards>

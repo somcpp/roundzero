@@ -1,0 +1,101 @@
+<PageInfo path="/h/[slug]/judging/projects" access="organizer" nav="Judging › Projects" />
+
+The Projects page lists every project in the hackathon, whatever its phase or status. Use it to bring projects in, check how complete each submission is, see where each one stands, and move groups of projects between phases. Click any row to open its [project detail](/docs/judging/project) page.
+
+## Getting projects in
+
+There are three ways to add projects. All three buttons sit at the top right of the page.
+
+| Button | What it does |
+| --- | --- |
+| **Add project** | Opens a form built from your [schema](/docs/setup/schema), one input per field. Disabled until the schema has at least one field. |
+| **API** | Opens the **Projects API** drawer, for importing projects from a script, spreadsheet or another platform. |
+| **Submission form** | Opens the **Submission form** drawer, for a public page where teams submit their own project. |
+
+A dot appears on **API** and **Submission form** while that way in is switched on.
+
+### Add by hand
+
+Click **Add project**, fill in the fields and click **Add project** in the drawer. You need to fill in at least one field. The project gets the next number and opens on its detail page. If you close the drawer with unsaved changes, you're asked to confirm before they're discarded.
+
+When the hackathon has no projects yet, the empty page offers **Add your first project** and **Add sample data**. Sample data adds a dozen made-up projects filled in from your schema, plus six sample judges if you have none. It only works before judging starts.
+
+### Import through the API
+
+Switch on **API access** in the drawer to show everything you need:
+
+- **Endpoint**: the URL to send projects to.
+- **API key**: shown in full once, right after you create or regenerate it. Copy it then, because it's stored hashed. **Regenerate** makes a new key and stops the old one working straight away.
+- **Agent prompt**: a ready-made prompt for a local coding agent such as Claude Code or Cursor. Point the agent at your spreadsheet or export and it maps your columns to your fields, checks with you, then imports.
+- **Fields**: the key and type for each schema field. Keys follow field titles, so renaming a field renames its key.
+- **Example request**: a `curl` command you can copy.
+
+Each request takes up to 100 projects, all or nothing, and each key can make 30 requests a minute. The [Intake API](/docs/reference/intake-api) reference covers the request format.
+
+### Collect through the submission form
+
+Switch on **Accept submissions** to get a public link. Share it with teams, or use **Open form** to see it yourself. Each submission shows up on this page straight away.
+
+- **Entrants fill in** lists the fields the form asks for. The field used as the project name is required.
+- **New link** makes a fresh link and stops the old one working. Use it, or switch the form off, if the link gets abused.
+- Each visitor can submit 5 projects every 10 minutes, and a hidden field catches most bots.
+
+See [Submission form](/docs/links/submission-form) for what teams see.
+
+<Callout type="warning" title="Late submissions">
+
+Projects that arrive after judging starts aren't in any phase until you move them into one. Judges are assigned only when a phase starts, so moving a project into a phase that's already running doesn't add it to any judge's queue. The agent doesn't review it either until you run it, from the project page or with **Run agent** on [Progress](/docs/judging/progress).
+
+</Callout>
+
+If either drawer says the server can't take outside submissions yet, the deployment is missing `SUPABASE_SECRET_KEY`. See [Configuration](/docs/reference/configuration).
+
+## The project table
+
+Each row is one project. The table shows:
+
+| Column | What it shows |
+| --- | --- |
+| **#** | The project number, like `#007`, given in the order projects arrive. |
+| **Project** | The name and one-line pitch. The name is the first text field in your schema and the pitch is the next text or long text field. A project without a name shows as `Project #007`. |
+| **Phase** | The [phase](/docs/setup/phases) the project is in, or a dash if it's in none. |
+| **Status** | Where the project stands. See [Statuses](#statuses). |
+| **Fields** | How many schema fields are filled in, like `5/7`. It's highlighted when some are empty. |
+| **Score** | The judges' average from the latest phase with submitted scores. Until any judge has scored, it shows the agent's total, marked with a spark icon. A dash means no scores yet. |
+
+### Statuses
+
+| Status | Meaning |
+| --- | --- |
+| **in the running** | Active. The project can be reviewed, advance and win. |
+| **eliminated** | Out of the running. It stays in the phase it was eliminated in. Closing a phase eliminates the projects that don't advance, and you can eliminate one by hand. |
+| **disqualified** | Ruled out of judging by an organizer. It leaves every judge's queue and never appears on the winners page. |
+
+You change a project's status from the gear menu on its [detail page](/docs/judging/project#status-and-phase). Resetting judging on [Progress](/docs/judging/progress) reinstates eliminated projects, but disqualifications stay.
+
+## Search, filter and sort
+
+Once there are projects, a toolbar appears above the table:
+
+- **Search projects…** matches the project number, name and any field value.
+- **Status** filters to one status.
+- **Phase** filters to one phase, or to **Not in a phase**.
+- **Clear** resets search and both filters.
+- The sort menu orders by **Newest first**, **Oldest first**, **Recently updated**, **Highest score** or **Name A–Z**.
+
+The count under the table shows how many projects match, out of the total.
+
+## Move projects between phases
+
+Tick the checkbox on each row you want, or the one in the header to select every visible row. A bar appears with the number selected and a **Move to phase…** menu. Pick a phase to move them there, or **Out of judging** to take them out of every phase. **Clear selection** unticks everything.
+
+Only rows that are still visible are moved, so changing a filter can't move projects you can no longer see. Every move is recorded in each project's audit trail.
+
+## Related
+
+<Cards>
+<Card href="/docs/judging/project" title="Project detail" icon="eye">One project's submission, reviews, scores and audit trail.</Card>
+<Card href="/docs/setup/schema" title="Schema" icon="table">The fields every project has, and the form built from them.</Card>
+<Card href="/docs/reference/intake-api" title="Intake API" icon="code">Send projects in from another system.</Card>
+<Card href="/docs/judging/progress" title="Progress" icon="chart-line">Start judging and watch projects move through phases.</Card>
+</Cards>

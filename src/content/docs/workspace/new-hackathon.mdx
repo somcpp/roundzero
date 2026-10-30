@@ -1,0 +1,79 @@
+<PageInfo path="/new" access="organizer" nav="Your hackathons › New hackathon" />
+
+The **Start a hackathon** page creates a hackathon and takes you straight into its setup. You only need a name. Everything else can change later in Setup.
+
+## Fill in the form
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| **Name** | Yes | Up to 120 characters. Also sets the hackathon's URL. |
+| **Tagline** | No | Up to 200 characters. Shown on the hackathon's card. |
+| **Dates** | No | A start and end date. The end can't be before the start. Without dates, the card reads "Dates TBD". |
+
+As you type, the **Preview** shows how the hackathon's card will look.
+
+Click **Create & set up**. The button stays disabled until the name has text. **Cancel** takes you back to Your hackathons without creating anything.
+
+If something is wrong, the form shows a message above the buttons, such as "Keep the name under 120 characters." or "The end date can't be before the start date."
+
+## The hackathon's URL
+
+The name becomes the hackathon's slug, which appears in `/h/[slug]` and in the public winners page at `/w/[slug]`. The slug is the name in lowercase, with accents removed, other characters replaced by hyphens, and a limit of 48 characters. "AI Agents Hack 2027" becomes `ai-agents-hack-2027`.
+
+Slugs are unique across the whole instance. If another hackathon already uses one, a short random suffix is added, such as `ai-agents-hack-2027-x7qa`. Renaming the hackathon later doesn't change its slug.
+
+## Color and logo
+
+The form has no color picker. A new hackathon takes the instance's accent color from `branding.config.js`, and its logo shows the name's initials. Change the color, logo and banner in [Setup › Branding](/docs/setup/branding).
+
+## What a new hackathon starts with
+
+Every hackathon starts in the Setup stage with the same defaults. Review them before you start judging. The prizes in particular are placeholders.
+
+### Schema
+
+Six blocks, in this order: **Title** (Text), **Description** (Text), **Video** (Video), **Images** (Image), **Overview** (Long text) and **GitHub** (Repo). See [Schema](/docs/setup/schema).
+
+### Criteria
+
+Four criteria, all on the **Score 1–10** scale with the **Balanced** model tier and written guidance for the agent:
+
+| Criterion | Weight | Mechanisms | Reads |
+| --- | --- | --- | --- |
+| Technical execution | 30% | Sandbox run, Code scraper, Agent judge | GitHub |
+| Video: problem & solution | 25% | Video reviewer | Video |
+| Impact | 25% | Agent judge, Web scraper | All inputs |
+| Originality & design | 20% | Agent judge | All inputs |
+
+Technical execution and the video criterion score 0 when their input is missing. Impact and Originality & design judge what's there. See [Criteria](/docs/setup/criteria).
+
+### Phases
+
+Two phases: **Group review**, with 2 reviews per project and the top 10 advancing, then **Final panel**, where every judge reviews every project. See [Phases](/docs/setup/phases).
+
+### Rewards
+
+| Tier | Who wins | Prizes |
+| --- | --- | --- |
+| Grand prize | Rank 1 | $5,000 cash, 100,000 API credits |
+| Runners-up | Ranks 2–3 | $2,000 cash, 25,000 API credits |
+| Top 10 finalists | Ranks 1–10 | 5,000 API credits, swag pack |
+| Most creative | Award, suggested by Originality & design scores | 10,000 API credits |
+| Best demo | Award, suggested by the video criterion's scores | 10,000 API credits |
+
+See [Rewards](/docs/judging/rewards).
+
+A new hackathon has no judges and no projects. Add them in [Setup › Judges](/docs/setup/judges) and [Judging › Projects](/docs/judging/projects).
+
+## After you create it
+
+The hackathon opens on Setup › Schema and appears at the top of [Your hackathons](/docs/workspace/hackathons). The [Quickstart](/docs/quickstart) walks through the rest.
+
+## Related
+
+<Cards>
+  <Card href="/docs/quickstart" title="Quickstart" icon="play">From a new hackathon to published winners.</Card>
+  <Card href="/docs/setup/schema" title="Schema" icon="table">Change what teams submit.</Card>
+  <Card href="/docs/setup/general" title="General" icon="gear">Rename it or change its dates later.</Card>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">Set its color, logo and banner.</Card>
+</Cards>

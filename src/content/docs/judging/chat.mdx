@@ -1,0 +1,68 @@
+<PageInfo path="/h/[slug]/judging/chat" access="organizer" nav="Judging › Chat" />
+
+Chat lets you ask questions about your projects in plain language. The assistant searches the submissions and the repos and demos they link to. It also reads judge scores and the agent's reviews, and can look things up on the web. Use it to compare projects, find similar ideas, check a claim, or see where judges and the agent disagree.
+
+It works before judging starts too. Until then there are no scores to read, so it answers from the submissions.
+
+## Ask a question
+
+Type in the box at the bottom and press Enter. A new chat also offers a few suggestions to start from:
+
+- Summarize the projects in scope
+- Which projects are most similar to each other?
+- Who scored furthest from the agent, and why?
+- Check if the top project's idea already exists on the web
+
+The model menu at the bottom of the box switches between **Fast**, for quicker answers, and **Smart**, which is better for comparisons and research. Smart is the default, and your browser remembers your pick. The bar above the conversation shows which projects you're chatting with and the model in use.
+
+Answers link to projects by number and name, like `#007 Repo Whisperer`, and open their detail page. If a reply fails, click **Retry**.
+
+## What it looks up
+
+Before answering, the assistant calls tools to fetch data. A folded row in each answer sums up what it did, such as `Searched projects, read 3 projects and searched the web`. Click the row to see each call, what it asked for and what came back.
+
+| Activity | What it reads |
+| --- | --- |
+| **Searched projects** | A semantic search over submissions and the pages they link to. |
+| **Listed projects** / **Read project** | Project fields, phase, status and audit trail. |
+| **Read scores** | Agent totals, judge assignments and submitted scores. |
+| **Read the agent's review of** | One project's agent review, criterion by criterion, including overrides and flags. |
+| **Searched the web** / **Read a web page** | The live web, through Tavily. Pages it used are listed as sources under the answer. |
+
+The assistant is instructed to base every claim on what these tools return and to say when the data isn't there. For decisions, check the answer against the [project page](/docs/judging/project).
+
+## Scope
+
+The sidebar sets which projects the chat is about. Each filter takes several values, and a project must match every filter you set:
+
+- **Projects**: hand-pick projects. When set, only these are in scope.
+- **Phase**: projects in any of the chosen [phases](/docs/setup/phases).
+- **Status**: **Active**, **Eliminated** or **Disqualified**.
+- **Judge**: projects assigned to any of the chosen judges, in any phase.
+
+A box under the filters shows how many projects are in scope, like `12 of 40 projects in scope`. Remove a value by clicking its chip. The assistant stays within scope unless you ask it to look wider. The scope is saved with the chat.
+
+## Project search index
+
+Project search runs on an index of each project's fields plus up to three pages it links to, such as its repo README and live demo. The **Project search index** box in the sidebar shows how many projects are indexed, like `38/40`.
+
+Projects you add or edit in the app are indexed when you save them. A project imported through the API or the submission form, or one that changed after it was indexed, counts as behind. Click **Index N** to index those projects, or **Reindex all** to rebuild the whole index.
+
+## Saved chats
+
+A chat is saved as soon as you send its first question, and that question becomes its title. The menu at the top of the sidebar switches between your chats, most recent first. The **+** button starts a new chat, and the trash button deletes the current one after you confirm. Chats belong to the organizer who started them.
+
+<Callout type="note" title="Wider screens only">
+
+The sidebar is hidden on narrow screens. To change scope, switch chats or update the index, use a wider window.
+
+</Callout>
+
+## Related
+
+<Cards>
+<Card href="/docs/judging/project" title="Project detail" icon="eye">The submission, scores and agent review the chat reads from.</Card>
+<Card href="/docs/judging/projects" title="Projects" icon="table">Every project, and the ways projects come in.</Card>
+<Card href="/docs/judging/progress" title="Progress" icon="chart-line">Scores and reviews as judging runs.</Card>
+<Card href="/docs/reference/configuration" title="Configuration" icon="gear">The keys the models and web search need.</Card>
+</Cards>

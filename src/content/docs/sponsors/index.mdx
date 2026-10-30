@@ -1,0 +1,42 @@
+RoundZero uses NVIDIA open models on Nebius, plus Tavily, for the work an agent is good at: building repos, reading code, visiting demos and checking claims. Judges keep the calls about the ideas.
+
+## The stack in RoundZero
+
+| Service | What RoundZero uses | Where it does the work |
+| --- | --- | --- |
+| [Nebius Token Factory](/docs/sponsors/nebius-token-factory) | One OpenAI-compatible API for every model call, with schema-enforced JSON and embeddings | Agent reviews, double checks, project summaries, Chat, chat search |
+| [Nebius Sandboxes](/docs/sponsors/nebius-sandboxes) | VM-isolated sandboxes that clone, install, build and test each repo | The **Sandbox run** mechanism and the agent's `runCommand` tool |
+| [NVIDIA Nemotron](/docs/sponsors/nvidia) | Nemotron 3.5 Lightning, Nemotron 3 Super 120B and Nemotron 3 Ultra 550B | The agent's three model tiers and Chat's Fast and Smart modes |
+| [Tavily](/docs/sponsors/tavily) | Extract, crawl and search | The **Web scraper** mechanism, the agent's web tools, Chat's index and web lookups |
+
+## How they fit together
+
+1. **Devpost** collects the submissions. An organizer exports them and sends them to RoundZero through the Intake API.
+2. When judging starts, the agent reviews each project one criterion at a time. Each criterion's mechanisms gather the evidence:
+   - **Sandbox run** clones the repo into a **Nebius Sandbox**, installs, builds and runs the tests.
+   - **Web scraper** reads the live demo with **Tavily**.
+   - **Code scraper** searches the repo for the packages and calls the organizer listed, such as the Token Factory API.
+3. An **NVIDIA Nemotron** model, served through **Token Factory**, reads the evidence, investigates with tools on the larger tiers, and returns its verdict as strict JSON.
+4. When the agent is unsure, a bigger Nemotron model judges the same evidence again.
+5. Judges score the ideas. In Chat, organizers ask questions across every project, answered by Nemotron over a search index built with Token Factory embeddings and Tavily.
+
+## Keys to set
+
+Each sponsor's tools need one key in your environment. [Configuration](/docs/reference/configuration#ai-models-and-sandboxes) lists every variable.
+
+| Variable | Service | Without it |
+| --- | --- | --- |
+| `NEBIUS` | Nebius Token Factory | No agent reviews, chat or sandboxes. |
+| `NEBIUS_PROJECT_ID` | Nebius Sandboxes | Sandbox runs can't start. The rest of the agent works. |
+| `TAVILY` | Tavily | Web steps are skipped, and the agent notes "TAVILY isn't set". |
+
+The NVIDIA models need no key of their own: Token Factory serves them with the `NEBIUS` key.
+
+## Sponsor pages
+
+<Cards>
+  <Card href="/docs/sponsors/nebius-token-factory" title="Nebius Token Factory" icon="spark">Every model call, schema-enforced verdicts and chat embeddings.</Card>
+  <Card href="/docs/sponsors/nebius-sandboxes" title="Nebius Sandboxes" icon="code">Clone, build and test every repo in an isolated VM.</Card>
+  <Card href="/docs/sponsors/nvidia" title="NVIDIA Nemotron" icon="chart-line">The models behind the agent's tiers and Chat.</Card>
+  <Card href="/docs/sponsors/tavily" title="Tavily" icon="globe">Live demos, web searches and linked pages.</Card>
+</Cards>

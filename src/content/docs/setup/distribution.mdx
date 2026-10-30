@@ -1,0 +1,89 @@
+<PageInfo path="/h/[slug]/setup/distribution" access="organizer" nav="Setup › Distribution" />
+
+Distribution decides how projects reach judges when each phase starts. [Phases](/docs/setup/phases) set how many judges review each project. This page sets the rest: whether the agent reviews every project, who handles the agent's gate failures, how the work is split, how fast queues open, and what happens when judges fail a gate.
+
+Every judge gets a private link that shows only their own queue. The settings here apply to every phase.
+
+## Defaults
+
+| Setting | Default |
+| --- | --- |
+| **Agent first** | On |
+| **Agent-failed inbox** | You, the hackathon owner |
+| **Strategy** | **Even split** |
+| **Cadence** | **All at once** (5 days if you switch to daily batches) |
+| **Show agent score** | On |
+| **Failed gates** | **Rule it out** after 2 failing reviews |
+
+Change any setting and click **Update** in the page header to save.
+
+## Agent first
+
+When on, the agent reviews every project as soon as judging starts. It runs every criterion's mechanisms and checks the gates. Judges get their queues at the same time and don't wait for the agent, so a judge can open a project before its review is done.
+
+## Agent-failed inbox
+
+This setting only applies with **Agent first** on. A project the agent fails on a gate ranks last and can't win until someone looks at it. Pick who that is:
+
+| Option | What happens |
+| --- | --- |
+| You (under **Admins**) | Gate failures wait in your Inbox for a call. |
+| A judge | Gate failures wait in your Inbox, which names that judge as the one who reviews them. Judges have no inbox on their link, so the call is made from yours. |
+| **Nobody — drop them** | Failures stand: those projects rank last and can't win. |
+
+From the **Inbox** in the top bar, you either agree with the agent and keep the project out, or disagree and put it back in the pool. If you delete the judge who has the inbox, it goes back to you. See [Failed inbox](/docs/judging/inbox).
+
+## Strategy
+
+- **Even split** gives every judge the same number of projects.
+- **Mixed** keeps the load the same and also rotates pairings, so no two judges share every project. That lets you compare scores across judges.
+
+## Cadence
+
+- **All at once** gives each judge their whole queue from the start.
+- **Daily batches** opens a new batch for each judge every 24 hours. Set how many days with **Spread over**, from 1 to 30.
+
+With daily batches, each judge gets an equal share of their queue each day, and can start the next batch early. Spreading over 1 day is the same as all at once. Short daily queues stop judges from rushing everything on the last day.
+
+If email is set up on your server, each time a batch opens, judges with new projects in it get an email. When the phase's days are up, judges with projects left get a last call, and you get a note that the phase is due.
+
+## Show agent score
+
+When on, a judge sees the agent's score for a project only after they submit their own, so it can't anchor them. They can then adjust their score once.
+
+## Failed gates
+
+This rule covers gates that judges fail in their reviews. (The agent's gate failures go to the inbox above.)
+
+- **Flag it**: a review that fails a gate flags the project, and you decide.
+- **Rule it out**: once enough reviews fail the same gate, the project is ruled out. Set the number with **Rule out after**, from 1 to 20 failing reviews. Fewer failing reviews than that flag the project for you instead.
+
+A ruled-out project ranks last, is eliminated when its phase closes, and can't win an award.
+
+## Preview
+
+The **Preview** panel under the settings shows what your phases and settings add up to:
+
+- With **Agent first** on, how many projects the agent screens, and who gets gate failures.
+- For each phase, the projects coming in, times reviews per project, divided by the judges in its pool, and the result: how many projects each judge gets.
+- A rough time per judge, at about 4 minutes per project, and a per-day count with daily batches.
+- **no judges in pool** when a phase's group is empty.
+
+Click **Edit phases** to change the phases themselves. The numbers fill in once projects are added.
+
+## After judging starts
+
+<Callout type="warning" title="The whole page locks">
+
+These settings decided the assignments already handed out, so none of them can change once judging starts. To change them, reset judging from [Progress](/docs/judging/progress) first.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/phases" title="Phases" icon="calendar">Judges, reviews per project and advance counts for each round.</Card>
+  <Card href="/docs/setup/criteria" title="Criteria" icon="check-list">Turn a pass/fail criterion into a gate.</Card>
+  <Card href="/docs/judging/inbox" title="Failed inbox" icon="inbox">Confirm or overturn the agent's gate failures.</Card>
+  <Card href="/docs/setup/portal" title="Judge portal" icon="eye">What judges see when they open their link.</Card>
+</Cards>

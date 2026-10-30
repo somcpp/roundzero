@@ -1,0 +1,86 @@
+<PageInfo path="/h/[slug]/setup/phases" access="organizer" nav="Setup › Phases" />
+
+Phases split judging into rounds. Each phase reviews what the one before passed on, so the pool shrinks until the last phase picks the winners. For each phase you choose who judges it, how many judges see each project, and how many projects go on to the next round.
+
+Plan your phases before judging starts. Once it does, only names and colors can change.
+
+## What you start with
+
+Every new hackathon has two phases:
+
+| Phase | Judges | Reviews per project | Advance |
+| --- | --- | --- | --- |
+| Group review | All judges | 2 | Top 10 |
+| Final panel | All judges | Everyone reviews all | Picks the winners |
+
+To hand **Final panel** to a smaller set of judges, save them as a group on [Judges](/docs/setup/judges), then pick that group in the phase.
+
+## The phase list
+
+Each row shows the phase's number in its color, its name, its judges and reviews per project, and a badge:
+
+- **top N** for how many projects advance.
+- **winners** on the last phase.
+- **set advance** in red when a phase other than the last has no advance count yet.
+- **running** or **closed** once judging reaches the phase.
+
+To add a phase, hover the gap between two phases and click **+**, or click **add phase** at the bottom. A new phase starts at 3 reviews per project. Drag rows to reorder them. Click a row to edit it in a drawer.
+
+Nothing is saved until you click **Update** in the page header.
+
+## Phase settings
+
+| Setting | What it does |
+| --- | --- |
+| **Name** | Up to 60 characters. Judges see it on their start screen, for example "Group review · round 1 of 2". |
+| **Color** | The phase's color on the progress funnel. Pick a preset or any color, or click **Use default** to go back to the color for its position. |
+| **Judges** | **All judges**, or one saved group. |
+| **Reviews per project** | **Set number** (1 to 20 judges per project) or **Everyone reviews all**, which suits a small final panel. |
+| **Advance** | How many top projects go on to the next phase. The last phase has no advance: it picks the winners. |
+
+The drawer warns you when the numbers don't work:
+
+- If **Reviews per project** is higher than the number of judges in the pool, each project gets one review per judge.
+- If **Advance** is at least as many projects as come into the phase, the phase wouldn't narrow anything.
+
+At the bottom of the drawer, a line estimates each judge's load: projects coming in, times reviews per project, divided by judges in the pool. It fills in once projects are in.
+
+### Rules for saving
+
+- Keep between 1 and 10 phases, each with a name.
+- Every phase but the last needs an advance count, from 1 to 10,000.
+- Each phase must advance fewer projects than the phase before it.
+
+## The funnel
+
+The sidebar funnel shows how many projects enter each phase. The first phase takes every active project. Each later phase takes what the one before advances, never more than came in. Before any projects exist, it shows the planned caps instead, such as "all" and "top 10".
+
+## How projects move on
+
+Projects never move on by themselves. When you're ready, you close the running phase on [Progress](/docs/judging/progress). Its projects are ranked, the top ones advance, the rest are eliminated, and the next phase starts. Closing the last phase sets the final ranking.
+
+Projects in a phase rank in this order:
+
+1. Projects with a failed gate go last. That means an agent gate failure nobody overturned, or judges' reviews that ruled the project out. See [Criteria](/docs/setup/criteria) for gates.
+2. Then by average judge score in that phase.
+3. Then by the agent's score.
+4. Then by submission order.
+
+Projects that judges' reviews ruled out never advance, and are eliminated when the phase closes. Whether failing reviews can rule a project out is set on [Distribution](/docs/setup/distribution).
+
+## After judging starts
+
+<Callout type="warning" title="Only names and colors can change">
+
+The judges, reviews per project and advance counts decided the assignments already handed out. Once judging starts, you can't add, remove or reorder phases or change those settings. A phase that has started can't be removed. To change them, reset judging from [Progress](/docs/judging/progress) first.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/judges" title="Judges" icon="users">Save the groups a phase can use.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">How each phase's projects are split between judges.</Card>
+  <Card href="/docs/judging/progress" title="Progress" icon="chart-line">Start judging and close each phase.</Card>
+  <Card href="/docs/results/winners" title="Winners" icon="crown">The final ranking from the last phase.</Card>
+</Cards>

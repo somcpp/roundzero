@@ -1,0 +1,188 @@
+A RoundZero instance reads its settings from two places: `branding.config.js` at the repo root, and environment variables. Nothing on this page is editable in the app. The [Settings](/docs/workspace/account#settings) page shows the branding and the Supabase variables read-only.
+
+## branding.config.js
+
+`branding.config.js` sets the name and look of the whole instance: the header, browser tab titles, the sign-in screen, emails, and the "Judged with" footer on submission forms and winners pages. Each hackathon still sets its own color, logo and banner on top of it in [Setup › Branding](/docs/setup/branding).
+
+The file as it ships:
+
+```js
+const branding = {
+  // Product name shown in the header, page titles and the "Judged with" footer.
+  name: "RoundZero",
+
+  // Short text badge (1–3 chars) used as the avatar mark when no logo is set.
+  badge: "R0",
+
+  // Optional square logo from /public, e.g. "/logo.svg". Replaces the badge.
+  logo: null,
+
+  // A preset — "purple", "blue", "sky", "teal", "green", "amber", "orange",
+  // "rose", "pink", "zinc" — or any custom hex like "#ff5a1f".
+  color: "purple",
+};
+
+export default branding;
+```
+
+| Option | Type | What it does |
+| --- | --- | --- |
+| `name` | string | Product name in the header, tab titles, emails and the "Judged with" footer. |
+| `badge` | string, 1–3 characters | Text mark shown in place of a logo when `logo` is empty. |
+| `logo` | string or `null` | Path to a square image in `/public`, such as `"/logo.svg"`. Replaces the badge everywhere. |
+| `color` | preset name or hex | The accent for buttons, links and highlights. New hackathons also start with this color. |
+
+Text on the accent color switches between white and near-black, whichever has more contrast.
+
+### Color presets
+
+| Preset | Hex |
+| --- | --- |
+| `purple` (default) | `#6e56e7` |
+| `blue` | `#0485f7` |
+| `sky` | `#0284c7` |
+| `teal` | `#0d9488` |
+| `green` | `#16a34a` |
+| `amber` | `#ca8a04` |
+| `orange` | `#ea580c` |
+| `rose` | `#e11d48` |
+| `pink` | `#db2777` |
+| `zinc` | `#18181b` |
+
+Any other value must be a hex color. A value that is neither a preset nor a hex stops the app with an error that lists the presets.
+
+<Callout type="warning" title="Use a six-digit hex">
+
+The config accepts three-digit hex like `"#f50"`, but new hackathons copy the instance color and a hackathon's color must have six digits. With a three-digit color, creating a hackathon fails with "Color must be a hex like #6e56e7."
+
+</Callout>
+
+Changes apply after you restart the dev server or redeploy.
+
+## Environment variables
+
+Set these in `.env.local` for local development, or in your host's environment variables in production. Never commit real values.
+
+### Supabase
+
+| Variable | Required | What it does |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Yes | Your Supabase project URL. Used for auth, the database and public image URLs. |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Yes | The project's publishable key, from Project Settings → API Keys. |
+| `SUPABASE_SECRET_KEY` | For intake and email | Server-only secret key. The Intake API, the public submission form and background email sends use it to write without a signed-in organizer. Never expose it to the browser. `SUPABASE_SERVICE_ROLE_KEY` works as a fallback name. |
+| `SUPABASE_DB_PASSWORD` | No | The database password for the Supabase CLI when you run migrations. The app itself doesn't use it. |
+
+Without `SUPABASE_SECRET_KEY`, the Intake API returns `503` and no emails go out. The rest of the app works.
+
+### AI models and sandboxes
+
+The agent, the judging chat, image descriptions and search embeddings all run on Nebius Token Factory through its OpenAI-compatible API.
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `NEBIUS` | None | Nebius Token Factory API key. Needed for agent reviews, chat and sandboxes. |
+| `NEBIUS_PROJECT_ID` | None | The Nebius project that sandboxes run in. `NEBIUS_AI_PROJECT` works as a fallback name. Without it, sandbox runs can't start. |
+| `NEBIUS_CHAT_MODEL` | `nvidia/nemotron-3-super-120b-a12b` | The chat model, and the agent's **Balanced** tier. |
+| `NEBIUS_QUICK_MODEL` | `nvidia/Nemotron-3_5-Lightning` | The **Quick** tier, and the chat's **Fast** option. |
+| `NEBIUS_DEEP_MODEL` | `nvidia/Nemotron-3-Ultra-550b-a55b` | The **In-depth** tier. |
+| `NEBIUS_VISION_MODEL` | `deepseek-ai/DeepSeek-V4.1-Flash` | Describes images for the Balanced and In-depth tiers. |
+| `NEBIUS_VISION_QUICK_MODEL` | `openbmb/MiniCPM-V-4_5` | Describes images for the Quick tier. |
+| `NEBIUS_SANDBOX_URL` | `https://api.tokenfactory.nebius.com/sandboxes` | The Nebius Sandboxes API. |
+| `NEBIUS_SANDBOX_IMAGE` | `node:22-bookworm`, imported once | The image repos are cloned onto: an image UUID, a tag, or a `docker://` reference to import. |
+| `AGENT_WORKER_BUDGET_MS` | `1500000` (25 minutes) | How long one agent worker keeps claiming queued reviews. |
+
+The embedding model, `Qwen/Qwen3-Embedding-8B` at 1,024 dimensions, is fixed in code because it must match the database's vector column.
+
+### Web, video and code
+
+| Variable | What it does | Without it |
+| --- | --- | --- |
+| `TAVILY` | Tavily API key. Reads and crawls web pages for the **Web scraper** mechanism, runs the agent's web searches, and fetches linked pages for Chat. | Those steps are skipped, and the agent notes "TAVILY isn't set". |
+| `SCRAPE_CREATORS_API_KEY` | ScrapeCreators API key. Loads YouTube video details and transcripts. | YouTube videos are reviewed without details or a transcript. Vimeo and Loom don't need it. |
+| `GITHUB_TOKEN` | Sent with GitHub API requests for a repo's recent commits. | Requests go out unauthenticated. |
+
+### Email
+
+Emails go out through Resend: judge invites and reminders, notices to the organizer, and winner and thank-you emails.
+
+| Variable | What it does |
+| --- | --- |
+| `RESEND` | Resend API key. `RESEND_API_KEY` works as a fallback name. |
+| `FROM_EMAIL` | Sender address on a domain verified in Resend, such as `judging@your-domain.com`. It can be written as `Name <address>`; only the address is used. Each hackathon sends as its own sender name at this address. |
+| `EMAIL_REDIRECT_TO` | For development. Sends every email to this address instead, with the real recipient in the subject. Leave it unset to send for real. |
+| `APP_URL` | The origin used for links in emails, such as `https://roundzero.example.com`. `NEXT_PUBLIC_APP_URL` works as a fallback name. |
+| `ALERT_EMAIL` | Where the [keep-alive check](/docs/reference/deployment#keep-supabase-awake) sends an email when Supabase stops answering. `EMAIL_REDIRECT_TO` doesn't apply to it. Without it, failures are only logged. |
+
+Without `RESEND` or `FROM_EMAIL`, no email is sent and the rest of the app works. Without `APP_URL`, links use `https://` plus `VERCEL_PROJECT_PRODUCTION_URL` on Vercel, or `http://localhost:` plus `PORT` (3000 by default).
+
+Emails to reserved example domains, such as `example.com` or anything ending in `.test`, aren't sent. They're recorded as failed, even when `EMAIL_REDIRECT_TO` is set.
+
+### Hosting
+
+| Variable | What it does |
+| --- | --- |
+| `SITE_HOSTS` | Hostnames that serve the marketing landing page. See [Landing page and site hosts](#landing-page-and-site-hosts). |
+| `DEMO_MODE` | Set to `true` to fill in a shared demo login on the sign-in page. See [Demo login](#demo-login). |
+| `DEMO_EMAIL`, `DEMO_PASSWORD` | The demo login. Default `demo@roundzero.dev` and `try-roundzero-demo`. |
+| `CRON_SECRET` | A random string of at least 16 characters. Vercel sends it with its cron requests, and `/api/cron/keep-alive` turns away requests without it. When it isn't set, anyone can call that route. It only reads from Supabase, and it emails at most one alert an hour. |
+| `NODE_ENV` | Set by Next.js. In production, `/landing` is limited to site hosts and the `roundzero.localhost` preview is off. |
+| `PORT` | The dev or server port, used for email links when nothing else sets the origin. |
+| `VERCEL_PROJECT_PRODUCTION_URL` | Set by Vercel. Used for email links when `APP_URL` isn't set. |
+
+## Landing page and site hosts
+
+The marketing landing page only appears on the official RoundZero site. A self-hosted instance doesn't show it: `/` is the sign-in screen or the dashboard.
+
+`SITE_HOSTS` lists the hostnames that serve the landing page, separated by commas. It defaults to `roundzero.dev,www.roundzero.dev`. Set it to an empty string to turn the landing page off. Hostnames match without the port and ignore case.
+
+```dotenv
+SITE_HOSTS=roundzero.dev,www.roundzero.dev
+```
+
+| Host | Signed out at `/` | Signed in at `/` | `/landing` |
+| --- | --- | --- | --- |
+| A site host | The landing page, served at `/` | Your hackathons | Opens the landing page |
+| Any other host | Sign-in screen | Your hackathons | Redirects to `/` in production |
+
+On a site host, `/` shows the landing page without changing the URL. On other hosts, signed-out visitors to `/` go to `/login`.
+
+### Preview in development
+
+When `NODE_ENV` isn't `production`:
+
+- `http://roundzero.localhost:3001` is treated as a site host, so you see `/` as a signed-out visitor to the official site would. Browsers resolve any `*.localhost` name to your machine. Use your dev server's port.
+- `/landing` opens directly on any host.
+
+`/docs` is public on every host, signed in or not.
+
+## Demo login
+
+For a public demo, set `DEMO_MODE=true`. The sign-in form then comes filled in with a shared demo login, so visitors such as hackathon judges just click **Sign in**. See [Demo login](/docs/workspace/account#demo-login) for what they can do.
+
+```dotenv
+DEMO_MODE=true
+# Optional: the demo login. These are the defaults.
+DEMO_EMAIL=demo@roundzero.dev
+DEMO_PASSWORD=try-roundzero-demo
+```
+
+The login is public on purpose. The demo account carries `demo: true` in its Supabase app metadata, which only the secret key can set. Row-level security reads the same flag: the demo account can read the hackathons marked as demos and nothing else, can't write anything, and can't create hackathons. The app also turns off every control that would save.
+
+Create the demo account and the demo hackathons with the seed script, once the migrations are applied:
+
+```bash
+pnpm demo:seed
+```
+
+It builds three hackathons with sample projects, judges, agent reviews and scores: one with results published, one partway through judging and one still in setup. They belong to a separate `demo-owner@roundzero.dev` account, which no one signs in to. Pass `--owner you@example.com` (or set `DEMO_OWNER_EMAIL`) to own them yourself, so you can edit them in the app. Running the script again replaces them and resets the demo login's password to `DEMO_PASSWORD`.
+
+Demo hackathons keep their submission form and Intake API turned off, and their judge links can't submit scores, so the demo account can open a judge link without changing anything. Turning `DEMO_MODE` off only hides the login from the sign-in page. To close the demo, also delete the demo account in Supabase.
+
+## Related
+
+<Cards>
+  <Card href="/docs/reference/deployment" title="Deployment" icon="code">Supabase, environment and hosting.</Card>
+  <Card href="/docs/workspace/account" title="Sign in and settings" icon="user">The read-only Settings page.</Card>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">A hackathon's own color, logo and banner.</Card>
+  <Card href="/docs/reference/intake-api" title="Intake API" icon="inbox">Needs SUPABASE_SECRET_KEY.</Card>
+</Cards>

@@ -1,0 +1,74 @@
+This guide takes one hackathon from an empty workspace to a published winners page. Each step covers the minimum and links to the page with the details.
+
+You need a running RoundZero instance and an organizer account. If you don't have them yet, see [Deployment](/docs/reference/deployment) and [Sign in and settings](/docs/workspace/account).
+
+<Steps>
+
+### Create the hackathon
+
+On **Your hackathons**, click **New hackathon**. Enter a **Name**, and optionally a **Tagline** and **Dates**, then click **Create & set up**.
+
+The hackathon opens on Setup › Schema with a default setup already in place: six submission fields, four criteria, two phases and five prize tiers. The next steps adjust them. See [Create a hackathon](/docs/workspace/new-hackathon).
+
+### Decide what teams submit
+
+In Setup › **Schema**, add, remove or reorder the blocks every submission has, such as the repo link, demo video and team. See [Schema](/docs/setup/schema).
+
+### Set the criteria
+
+In Setup › **Criteria**, define what projects are scored on. Give each criterion a scale, a weight and a rubric, and choose the mechanisms the agent uses to check it. Weights should add up to 100%. Turn a pass/fail criterion into a gate when projects must meet it to be eligible. See [Criteria](/docs/setup/criteria).
+
+### Add judges
+
+In Setup › **Judges**, add each judge. Save a group, such as a final panel, if a phase should only go to some of them. Every judge gets a private link. See [Judges](/docs/setup/judges).
+
+### Plan the phases and distribution
+
+In Setup › **Phases**, set how many judges review each project and how many projects advance to the next round. The default runs a **Group review** that sends its top 10 to a **Final panel**. See [Phases](/docs/setup/phases).
+
+In Setup › **Distribution**, choose whether the agent reviews first, how work is split between judges, and whether it goes out all at once or in daily batches. See [Distribution](/docs/setup/distribution).
+
+### Collect projects
+
+In Judging › **Projects**, use **Add project** to enter one by hand, **Submission form** to open a public form for teams, or **API** to import from a spreadsheet or another platform. See [Projects](/docs/judging/projects), [Submission form](/docs/links/submission-form) and the [Intake API](/docs/reference/intake-api).
+
+<Callout type="tip" title="Trying it out?">
+
+Before judging starts, Judging › **Progress** has an **Add sample data** button. It adds 12 sample projects, plus 6 sample judges if you have none.
+
+</Callout>
+
+### Start judging
+
+Open Judging › **Progress**, or click **Start judging** in the hackathon's header. Review the checklist, then click **Start judging**.
+
+Every active project moves into the first phase, the agent's review is queued for each project when **Agent first** is on, and assignments go out to judges. Setup locks: schema, criteria and phases can only be renamed, and distribution can't change. See [Progress](/docs/judging/progress).
+
+### Follow the judging
+
+Judges open their private link and score their queue. When email is set up, each judge gets their link by email as a phase starts. You can also copy the links from Judging › **Progress** or Setup › **Judge portal**. See [Judge link](/docs/links/judge-portal). Watch progress on Judging › **Progress**. If the agent fails a project on a gate, it waits in the **Inbox** in the header for someone to agree or overturn the call. See [Failed inbox](/docs/judging/inbox).
+
+### Close each phase
+
+When a phase is done, click **Close phase** on Progress. The top projects advance and the next phase starts; the rest are eliminated. Closing the last phase ranks the remaining projects and moves the hackathon to Results.
+
+### Pick the winners
+
+In Judging › **Rewards**, set the prize tiers: prizes by final rank, and awards such as best demo. In Results › **Winners**, check the final ranking and pick the award winners. See [Rewards](/docs/judging/rewards) and [Winners](/docs/results/winners).
+
+### Publish the results
+
+On Results › **Winners**, click **Publish results**. The winners page at `/w/[slug]` becomes public. See [Winners page](/docs/links/winners-page).
+
+To tell teams, use the **Results emails** section on the same page: **Email winners** sends each winner their prizes, and **Email everyone else** sends a thank-you. Preview the winner emails in Results › **Emails**. See [Winner emails](/docs/results/emails).
+
+</Steps>
+
+## Related
+
+<Cards>
+  <Card href="/docs/concepts" title="Key concepts" icon="notebook">What phases, gates and assignments mean.</Card>
+  <Card href="/docs/workspace/new-hackathon" title="Create a hackathon" icon="plus">What a new hackathon starts with.</Card>
+  <Card href="/docs/judging/progress" title="Progress" icon="chart-line">Start judging and close phases.</Card>
+  <Card href="/docs/results/winners" title="Winners" icon="crown">Rank, pick and publish.</Card>
+</Cards>

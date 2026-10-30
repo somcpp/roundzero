@@ -1,0 +1,52 @@
+<PageInfo path="/h/[slug]/setup/branding" access="organizer" nav="Setup › Branding" />
+
+Branding sets how the hackathon looks: its name, logo, primary color and banner. They show up on your own admin pages for the hackathon and on everything entrants and judges see, from the submission form to the winner emails.
+
+## Fields
+
+| Field | What it does |
+| --- | --- |
+| **Hackathon name** | The same name as on [General](/docs/setup/general). Required, up to 120 characters. |
+| **Logo** | Drop an image on the logo tile, or click **Upload logo**. PNG, JPEG or SVG, under 20 MB. Square logos look best. |
+| **Initials** | Shown on the brand color until you upload a logo. Up to 3 letters. Leave it empty to use the name's initials. |
+| **Primary color** | Pick one of the ten presets, or click **Custom color** to choose any color or type a hex value. |
+| **Banner** | A wide image, center-cropped to 8:3. Drop it on the banner area or click **Upload banner**. Under 20 MB. |
+
+Without a banner, a pixel-art cover in your primary color fills that space instead.
+
+To take an image off, click **Remove** next to it and confirm. Without a logo, your initials show on the brand color. Without a banner, the pixel-art cover comes back.
+
+## Save your changes
+
+Click **Save branding** at the bottom of the form. Images upload as soon as you pick them, but nothing changes for anyone else until you save. The button reads **Saved** once it's done.
+
+## Live preview
+
+The right side of the page previews your branding as you change it:
+
+- A judge's scoring screen, with your logo, name and color on the buttons and score bars.
+- The top of your public winners page, with the banner or pixel-art cover, and its address, `/w/<slug>`.
+
+## Where branding appears
+
+| Place | Logo | Color | Banner |
+| --- | --- | --- | --- |
+| Your admin pages for this hackathon | Yes | Yes | No |
+| Your hackathon list | Yes | Yes | Yes |
+| [Submission form](/docs/links/submission-form) | Yes | Yes | Yes |
+| [Judge portal](/docs/links/judge-portal) | Yes | Yes | No |
+| [Winners page](/docs/links/winners-page) | Yes | Yes | Yes |
+| Emails to judges, winners and entrants | Yes | Yes | No |
+
+Emails don't use the banner. They use the pixel-art pattern in your color, with the logo on top.
+
+The name appears in all of these places too. Renaming the hackathon doesn't change its URL: see [General](/docs/setup/general).
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/general" title="General" icon="gear">Name, tagline, dates and stage.</Card>
+  <Card href="/docs/links/submission-form" title="Submission form" icon="globe">The branded public form.</Card>
+  <Card href="/docs/links/winners-page" title="Winners page" icon="trophy">The branded public results page.</Card>
+  <Card href="/docs/setup/portal" title="Judge portal" icon="eye">The start and finish screens judges see.</Card>
+</Cards>

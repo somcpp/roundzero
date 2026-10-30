@@ -1,0 +1,128 @@
+<PageInfo path="/h/[slug]/results" access="organizer" nav="Results › Winners" />
+
+The Winners page is where judging turns into results. Here you check the ranking, adjust the final order, pick the winners of each award, and publish the public winners page. You can open it at any point, but most of what you do here happens after the last phase closes.
+
+## Where results stand
+
+The badge in the page header tells you which state the results are in.
+
+| Badge | When | What the ranking shows |
+| --- | --- | --- |
+| **Not started** | No phase has started yet | Nothing. A **Go to Progress** button takes you to start judging. |
+| **Judging in progress** | A phase is running | A projection from the running phase, the same way closing it would rank. You can't reorder it. |
+| **Draft, not published** | The last phase has closed | The final ranking. You can drag to reorder it. |
+| **Published** | You published the results | The final ranking, now visible on the public winners page. |
+
+The line under the page title says where the ranking comes from, for example "Projected from Finals. It locks in when the last phase closes."
+
+## Ranking
+
+The top three sit on a podium, each with its score and the first prize it wins. Below that, the **Ranking** list shows every ranked project with its place, name, prizes and score. The first 10 show by default; the link under the list shows the rest.
+
+Projects are ordered the same way a phase is ranked when it closes:
+
+1. Projects that passed their gates come before those that failed one.
+2. Then by average judge score.
+3. Then by the agent's score.
+4. Then by submission order.
+
+The score on each row is the project's average judge score in the phase the ranking comes from. Projects that judges ruled out on a gate when the last phase closed are eliminated and left out of the final ranking.
+
+### Badges on a row
+
+- **gate flagged** or **ruled out**: reviews failed one of the gate criteria. Hover to see which.
+- Prize names: the rank tiers this place collects, up to two, then **+N**.
+- **Team won with #012**: with one prize per team turned on, a better-ranked project from the same team already takes the team's prize. This project gets nothing, and the places below it move up.
+
+### Adjust the final order
+
+Once the last phase has closed, you can drag rows into a different order. Prizes follow the position, so a project dragged into first place collects the first-place prizes.
+
+After a drag, a bar appears above the list. Click **Save order** to keep the new order, or **Undo** to go back to the saved one. Saving records the new rank in the audit trail of each project that moved.
+
+## Awards
+
+The **Awards** column lists every reward tier whose **Who wins** is set to **Award** on the [Rewards](/docs/judging/rewards) page. Each card shows the award's name, description, and how many of its winner slots are filled, for example **1/2**.
+
+While an award has open slots, it offers two ways to pick:
+
+- **Suggested**: the top three eligible projects, each with a score. Click one to make it a winner. For an award picked by **Top on a criterion**, the score is the judges' average on that criterion. Otherwise it's the project's average judge score.
+- **Pick any project…**: a dropdown of every eligible project.
+
+To take a winner off an award, click the **x** next to its name and confirm with **Remove winner**. The change is logged in the project's audit trail, and the project no longer gets that award's rewards.
+
+You can pick award winners while judging is still running. The note at the bottom of each card explains how suggestions are made and what the award includes.
+
+### Who can't win an award
+
+Some projects are left out of the suggestions and the dropdown:
+
+- Disqualified projects.
+- Projects that failed an agent gate, or that judges ruled out on a gate.
+- For an award with **Only projects without a rank prize** turned on: projects that already win a rank prize.
+- With one prize per team turned on: projects whose team already wins something else.
+
+## Who gets what
+
+The **Who gets what** section lists every project that wins anything, from rank tiers and awards, with a badge for each prize. Click a project to open its [project page](/docs/judging/project). Use **Edit rewards** to change the tiers themselves.
+
+## Publish results
+
+Publishing makes the [winners page](/docs/links/winners-page) public. The **Publish results** button stays disabled until the last phase has closed.
+
+<Steps>
+
+### Close the last phase
+
+On [Progress](/docs/judging/progress), close the final phase. The ranking becomes final and the badge changes to **Draft, not published**.
+
+### Check the ranking and awards
+
+Reorder the ranking if you need to, and fill every award's winner slots.
+
+### Publish
+
+Click **Publish results**. The badge changes to **Published**, and a **Public page** button opens the winners page in a new tab.
+
+</Steps>
+
+<Callout type="note" title="Publishing doesn't send email">
+
+Winners aren't emailed when you publish. Send the emails yourself from the **Results emails** panel below.
+
+</Callout>
+
+## Results emails
+
+Once the ranking is final, the **Results emails** panel on this page sends two separate emails, one per project:
+
+| Row | Who gets it | Button |
+| --- | --- | --- |
+| **Winners** | Each winning project, with its prizes and how to claim them | **Email winners** |
+| **Everyone else** | Every other project: a thank-you with the winners and any thank-you gift | **Email everyone else** |
+
+Each row shows how many projects it covers and how many emails are **sent**, **sending** or **failed**. Both buttons stay disabled until the last phase closes, and **Everyone else** also stays disabled while the thank-you email is switched off in its settings.
+
+- **Confirm first.** Each button asks you to confirm and tells you how many emails it will send.
+- **Safe to press again.** Projects that were already emailed are skipped, so after you add missing contact emails the button changes to **Email N more**.
+- **Projects without a contact email are skipped.** The row lists them with a link to add their emails on the Projects page.
+- **Publish first if you can.** The emails link to the winners page. If it isn't public yet, the link won't open until you publish.
+
+Use **Preview** on each row to check the email before sending, and **Edit email copy** to change the wording on the [Rewards](/docs/judging/rewards) page.
+
+The public page reads the current ranking and awards each time it loads, so changes you make after publishing show up there. To take the page down, click **Unpublish** and confirm. The winners page goes back to private.
+
+<Callout type="warning">
+
+**Reset judging** on the Progress page clears the final ranking and every award winner, and unpublishes the results.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/judging/rewards" title="Rewards" icon="gift">Set up the rank tiers and awards that decide who wins what.</Card>
+  <Card href="/docs/results/emails" title="Winner emails" icon="mail">Preview the email each winning project gets.</Card>
+  <Card href="/docs/links/winners-page" title="Winners page" icon="globe">The public page you publish from here.</Card>
+  <Card href="/docs/judging/progress" title="Progress" icon="chart-line">Close the last phase to lock in the final ranking.</Card>
+</Cards>

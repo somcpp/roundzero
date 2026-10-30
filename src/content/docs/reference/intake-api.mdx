@@ -1,0 +1,192 @@
+<PageInfo path="/api/intake" access="api" nav="Judging › Projects › API" />
+
+The Intake API creates projects in a hackathon from outside RoundZero: a script, a spreadsheet import, or another platform's export. One `POST` creates up to 100 projects, and a `GET` returns the fields the hackathon expects. The public [submission form](/docs/links/submission-form) sends its entries to the same endpoint.
+
+## Turn on the API
+
+1. Open the hackathon's Judging › **Projects** page and click **API**. The **Projects API** drawer opens.
+2. Switch on **API access**. The first time, this creates the hackathon's API key.
+3. Copy the key under **API key** right away. It's stored hashed, so the drawer stops showing it once you leave the page.
+
+The drawer also shows the **Endpoint**, a **Fields** table, an **Example request**, and an **Agent prompt** you can paste into a coding agent so it maps your spreadsheet's columns and runs the import.
+
+**Regenerate** replaces the key, and the old one stops working straight away. Switching **API access** off rejects the key until you switch it back on. The key stays the same.
+
+<Callout type="warning" title="Needs the server's secret key">
+
+The endpoint writes projects with `SUPABASE_SECRET_KEY`. Without it, the drawer shows "This server can't take outside submissions yet" and every request returns `503`. See [Configuration](/docs/reference/configuration#supabase).
+
+</Callout>
+
+## Authentication
+
+Each hackathon has its own credentials, and the credential decides which hackathon a request writes to.
+
+| Credential | How to send it | Used by |
+| --- | --- | --- |
+| API key | `Authorization: Bearer rk_…` header | Scripts and agents. Works for `GET` and `POST`. |
+| Form token | `"form"` field in the `POST` body | The public submission form at `/f/[token]`. `POST` only. |
+
+API keys start with `rk_`. Use an API key for integrations. The form token format is described in [Submission form requests](#submission-form-requests).
+
+## Read the fields
+
+`GET /api/intake` returns the hackathon and the fields its projects take, in form order.
+
+```bash
+curl https://roundzero.example.com/api/intake \
+  -H "Authorization: Bearer $ROUNDZERO_API_KEY"
+```
+
+For a hackathon with the default schema, the response is:
+
+```json
+{
+  "hackathon": { "name": "AI Agents Hack 2027", "slug": "ai-agents-hack-2027" },
+  "fields": [
+    { "key": "title", "title": "Title", "shape": "string", "type": "text", "description": "The project's name.", "expected": "Short and memorable" },
+    { "key": "description", "title": "Description", "shape": "string", "type": "text", "description": "Elevator pitch: what it does, in one line.", "expected": "One sentence" },
+    { "key": "video", "title": "Video", "shape": "string", "type": "video url", "description": "Demo of the project running. State the problem, then show the solution.", "expected": "≤ 3 min" },
+    { "key": "images", "title": "Images", "shape": "string[]", "type": "image", "description": "Screenshots or photos of the project.", "expected": "Up to 5 images" },
+    { "key": "overview", "title": "Overview", "shape": "string", "type": "long text", "description": "Inspiration, what it does, how it was built, challenges, what's next.", "expected": "The full project story" },
+    { "key": "github", "title": "GitHub", "shape": "string", "type": "repo url", "description": "Public repo with a README and run instructions.", "expected": "Agents can clone this" }
+  ],
+  "contact": { "key": "contact_email", "title": "Contact email", "shape": "string", "description": "Where the team hears about results. Winner and thank-you emails go here." },
+  "maxBatch": 100
+}
+```
+
+## Fields and values
+
+### Field keys
+
+Each schema block becomes a field. Its key is the block's title in lowercase, with accents removed and anything other than letters and digits replaced by `_`. "GitHub repo" becomes `github_repo`. When two blocks share a key, the later ones get `_2`, `_3` and so on.
+
+Keys follow the titles in Setup › Schema, so renaming a block renames its key. Call `GET` before an import to get the current list. You can also use a block's id as its key.
+
+Every project also has a `contact_email` field outside the schema. It's where winner and thank-you emails go.
+
+### Value shapes
+
+| Block type | Shape | Rules |
+| --- | --- | --- |
+| Text, Long text, Select | `string` | Up to 10,000 characters. |
+| URL, Video, Repo | `string` | One link, with no spaces. Links without a scheme get `https://`. |
+| Number | `number` | Numeric strings such as `"3"` are accepted. |
+| Image, File | `string[]` | Public links, not uploads. Links without a scheme get `https://`. |
+| Team | `string[]` | Member names. |
+| `contact_email` | `string` | A valid email address, up to 254 characters. Stored in lowercase. |
+
+`string[]` fields take up to 50 entries of up to 2,000 characters each. A single string with one entry per line works too.
+
+Every field is optional. Leave a field out rather than sending an empty value: `null`, empty strings and empty arrays are skipped. Each project needs at least one schema field with a value, and a project without a name shows up as "Project #012". Keys that match no field are rejected.
+
+## Create projects
+
+`POST /api/intake` with a JSON body holding a `projects` array of 1 to 100 projects. The whole body can be up to 1,000,000 bytes. A body that is a single project object, without the `projects` wrapper, creates one project.
+
+```bash
+curl -X POST https://roundzero.example.com/api/intake \
+  -H "Authorization: Bearer $ROUNDZERO_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "projects": [
+      {
+        "title": "Repo Whisperer",
+        "description": "Ask any codebase anything",
+        "video": "https://youtube.com/watch?v=your_video_id",
+        "images": ["https://example.com/screenshot.png"],
+        "overview": "What it does, how it was built and what comes next.",
+        "github": "https://github.com/team/project",
+        "contact_email": "team@example.com"
+      }
+    ]
+  }'
+```
+
+A successful request returns `201` with the new projects in the order you sent them:
+
+```json
+{ "created": [{ "id": "4c1e8f3a-5b0d-4d0e-9a57-2f1c6b8e7d10", "number": 13 }] }
+```
+
+Numbers continue from the hackathon's highest project number. Each project's audit trail records it as submitted by the API.
+
+Requests are all or nothing. If any project is invalid, nothing is saved and the response lists the problems by position (see [Errors](#errors)). Fix those projects and resend the whole batch.
+
+<Callout type="warning" title="Don't resend a batch that succeeded">
+
+The API doesn't detect duplicates. Sending the same projects again after a `201` creates them twice.
+
+</Callout>
+
+Projects created after judging has started aren't in any phase. Move them into one from Judging › Projects if they should be judged.
+
+## Submission form requests
+
+The public form at `/f/[token]` posts one project at a time, with no `Authorization` header:
+
+```json
+{
+  "form": "your_form_token",
+  "values": { "block-id": "value" },
+  "contactEmail": "team@example.com"
+}
+```
+
+- `form` is the token from the form's link. A wrong token, or a form that's switched off, returns `404` with "This submission form is closed."
+- `values` is keyed by block id. Field keys don't work here.
+- The name block (the first Text block) and `contactEmail` are required.
+- A non-empty `website` field marks the request as a bot. It gets a `201` with an empty `created` list and nothing is saved.
+- A validation error returns `422` with the first problem only, and no `errors` list.
+
+The audit trail records these projects as submitted by the submission form.
+
+## Errors
+
+Errors return JSON with an `error` message. Validation errors on API requests also include an `errors` list:
+
+```json
+{
+  "error": "Some projects are invalid. Nothing was saved.",
+  "errors": [{ "index": 0, "error": "\"Video\" should be a single link." }]
+}
+```
+
+`index` is the project's position in the `projects` array, starting at 0.
+
+| Status | When | Message |
+| --- | --- | --- |
+| `400` | The body isn't JSON, isn't an object, or `projects` isn't a non-empty array. A form request has no `values`. | "Body must be JSON.", "Body must be a JSON object.", "\"projects\" must be a non-empty array.", "Missing form values." |
+| `401` | No credential, a malformed `Authorization` header, a wrong key, or the API is switched off. | "Missing API key.", "Send your API key as \"Authorization: Bearer rk_…\".", "That API key is wrong, or the API has been switched off." |
+| `404` | Form requests: a wrong token or a closed form. | "This submission form is closed." |
+| `409` | Another project was created at the same moment. Retry the request. | "Another project was added at the same moment. Try again." |
+| `413` | The body is over 1,000,000 bytes, or holds more than 100 projects. | "Request body is too large. Send fewer projects at a time.", "Send at most 100 projects per request." |
+| `422` | A project is invalid: an unknown key, a value of the wrong shape, an invalid contact email, or no fields filled in. | "Some projects are invalid. Nothing was saved." |
+| `429` | A rate limit is reached. Wait for the `Retry-After` header's seconds. | "Too many requests. Try again in 42 seconds." |
+| `500` | An unexpected server error. | "Something went wrong on our side. Try again in a moment." |
+| `503` | The server has no working `SUPABASE_SECRET_KEY`. | "Intake isn't set up on this server yet: …" |
+
+If intake is switched off while a request is in flight, it fails with "Intake was just switched off." (`401` for API keys, `404` for forms).
+
+## Rate limits
+
+Limits count requests in fixed windows. `GET` requests count too.
+
+| Limit | Applies to |
+| --- | --- |
+| 60 requests a minute | Every intake request from one IP address |
+| 30 requests a minute | One API key |
+| 5 requests every 10 minutes | One form, from one IP address |
+| 300 requests every 10 minutes | One form, from all IP addresses |
+
+A request over a limit gets `429` and a `Retry-After` header with the seconds until the window resets. For large imports, send 100 projects per request.
+
+## Related
+
+<Cards>
+  <Card href="/docs/judging/projects" title="Projects" icon="table">Where the API and form are switched on.</Card>
+  <Card href="/docs/links/submission-form" title="Submission form" icon="globe">The public form that uses this endpoint.</Card>
+  <Card href="/docs/setup/schema" title="Schema" icon="list">The blocks that become API fields.</Card>
+  <Card href="/docs/reference/configuration" title="Configuration" icon="gear">SUPABASE_SECRET_KEY and the other variables.</Card>
+</Cards>

@@ -1,0 +1,134 @@
+<PageInfo path="/h/[slug]/judging/projects/[number]" access="organizer" nav="Judging › Projects › click a project" />
+
+A project's detail page holds everything about one submission: what the team sent in, every judge's scores, the agent's review, and an audit trail of everything that happened to it. It's also where you edit the project, change its phase or status, direct the agent, and score on a judge's behalf.
+
+## Header
+
+Under the project's name you see its number and phase, like `#007 · Semifinal · phase 2 of 3`, or **Not in a phase**.
+
+On the right, badges show where the project stands:
+
+| Badge | Meaning |
+| --- | --- |
+| **in the running**, **eliminated**, **disqualified** | The project's [status](/docs/judging/projects#statuses). |
+| **final rank #N** | The place it finished when the last phase closed. |
+| **winner** | It holds at least one prize. |
+| **gate flagged** | Judges failed it on a gate criterion. Hover to see which gate and how many reviews. |
+| **ruled out · gate** | Enough judges failed it on a gate to rule it out, under the rule set in [Distribution](/docs/setup/distribution). |
+
+Next to the badges:
+
+- **Public page** opens the project on the [winners page](/docs/links/winners-page). It works only for finalists and award winners, never for disqualified projects. Before results are published it opens a preview.
+- **Edit** opens the same form as **Add project**. Saving logs which fields changed.
+- The gear button, **Project settings**, opens the menu described below.
+
+## Status and phase
+
+The gear menu has three sections.
+
+- **Phase** lists every phase plus **Not in a phase**, with a check beside the current one. Pick another to move the project.
+- **Status** shows **Eliminate…** and **Disqualify…** for a project in the running, or **Reinstate** for one that's out. Eliminating or disqualifying asks you to confirm and takes an optional **Reason** for the audit trail.
+- **Delete project…** deletes the project, its answers and its whole audit trail. This can't be undone.
+
+An eliminated project stays in its phase but drops out of the running. A disqualified project leaves judging and every judge's queue. Both can be reinstated later.
+
+## Winner banner
+
+When the project wins something, a banner appears above the page. It shows the final rank (for example, `#2 of 10`), each prize tier the project won, and what's in each one. The banner also says whether the results are public yet. **Results** takes you to the [Winners](/docs/results/winners) page.
+
+## Submission
+
+Every field from your [schema](/docs/setup/schema), in order, with the team's answer. Links open in a new tab, team members show as chips and images show as thumbnails. Empty fields show a dash.
+
+## Judges
+
+This section shows every review of the project, with one table per phase and the latest phase first. Each column is a reviewer and each row is a criterion, with its weight and a **gate** tag for gate criteria. Scores are 1–10 or a **pass**/**fail** badge. The footer shows each reviewer's **Total** and the phase **Average**. A review that isn't in yet reads **pending** while the phase runs and **not scored** after it closes. Judges' notes are listed under the table.
+
+If judges failed the project on a gate, a banner above the tables names the gate and how many reviews failed it. It also says whether that rules the project out or flags it for you to decide. If you agree with a flagged gate, eliminate or disqualify the project from the gear menu.
+
+### Score for a judge
+
+Click a judge's name above their column to open their **Judge view**. This page shows the submission as the judge sees it, next to a scoring rail with one control per criterion and **Notes**. Scores you submit here count as that judge's, and the audit trail records that you entered them. If other judges review this project in the same phase, their avatars in the banner switch between them.
+
+You have to score every criterion before **Submit score** is enabled. After that the button becomes **Update score**. Once the phase stops running, the rail is locked.
+
+While the phase is running, **Judge page** under a judge's name opens their own [judge portal](/docs/links/judge-portal) link for this project. Scores entered there also count as theirs.
+
+### Add your own score
+
+While the project's phase is running, **Add your score** appears under that phase's table. It opens a page where you score the project yourself. Your review is one more score in the phase average, next to the assigned judges'. It doesn't change anyone else's score, and it's logged under your name.
+
+Submit with **Add my score** and change it later with **Update score**. **Remove my score** takes it back out of the average. You get one score per phase, and only while the project is in the running.
+
+## Agent review
+
+The agent works through your [criteria](/docs/setup/criteria) one at a time using each one's mechanisms, and explains every verdict with evidence. The section refreshes itself while the agent is working.
+
+### Run or re-run
+
+**Run agent review** starts a review of a project the agent hasn't seen. **Re-run review** judges every criterion again from scratch. Either one opens a drawer with two options:
+
+- **What should it look at?** Direction for this run, on top of each criterion's own guidance. Use it for things like where the SDK calls live or a demo login.
+- **Model**: **Per criterion** uses each criterion's own setting. **Quick**, **Balanced** or **In-depth** override it for this run.
+
+Re-running clears any overrides you made. The old verdicts stay in the audit trail.
+
+### Summary
+
+The summary card shows the agent's total out of 10 and a gate badge. The total weights each criterion by its weight, counts a pass as 10 and a fail as 0, and uses your override wherever you made one.
+
+| Gate badge | Meaning |
+| --- | --- |
+| **gates passed** | Every gate criterion passed. |
+| **gate failed** | The agent failed a gate. The project waits in the [failed inbox](/docs/judging/inbox). |
+| **gate failed · upheld** | Someone agreed with the agent in the inbox. |
+| **Gate failure overturned** | Someone disagreed in the inbox, so the project ranks on its scores. |
+
+Next to the total you'll find the timing, model and tokens used, then the agent's write-up with **Strengths** and **To improve**. The badge beside the section title shows the review's state: **queued**, **reviewing** with steps done, **failed**, **done**, or how many steps need a person.
+
+### Steps
+
+Each criterion gets a row showing the agent's verdict, its confidence, and icons for the mechanisms used. Rows can carry **gate**, **needs a person** and **overridden** tags. Criteria set to human only read **Judges only**, since the agent doesn't score them. Click a row to expand it:
+
+- **Reasoning** and **Evidence**: why the agent gave this verdict, and what it rests on.
+- **Feedback for the team**.
+- **Flags**, such as **missing input**, **broken link**, **unverified claim**, **suspicious** or **prompt injection**.
+- **Double check**: whether a second pass, one tier up, agreed. In-depth criteria are re-checked on In-depth.
+- **How it got there**: each tool call, command and model call, in order. Click an entry for its output.
+
+### Directing a step
+
+| Control | What it does |
+| --- | --- |
+| **Re-run…** | Judges this criterion again for this project only, with optional direction and model. The current verdict stays until the new one is in. |
+| **Flag…** | Marks the step as needing a person, with a note on what to check. It shows under **Needs a person** on [Progress](/docs/judging/progress). |
+| **Override…** | Replaces the agent's verdict with your own score or pass/fail. A reason is required. This also clears the flag. |
+| **Looks right** | On a flagged step, clears the flag and keeps the agent's verdict. |
+| **Clear override** | Makes the agent's verdict count again. |
+
+A step is flagged for a person when the agent asks for one, when the step couldn't finish, when the double check disagreed, when a gate failed, or when you flag it.
+
+<Callout type="note" title="Sandbox runs">
+
+When a criterion uses sandbox runs but the deployment can't start them, a note says why, such as `NEBIUS_PROJECT_ID` not being set. The agent still reads and searches the code, but can't install, build or test it. See [Configuration](/docs/reference/configuration).
+
+</Callout>
+
+## Scores panel
+
+The panel beside the page sums up the project. It shows the average total from the latest phase it was reviewed in, how many judges are in (like `1 of 2 judges in · +1 admin`), and each criterion's average and weight. The **Agent** row shows the agent's total, with badges for a failed or overturned gate and the number of flagged steps.
+
+## Audit trail
+
+The audit trail lists everything that happened to the project, newest first: submission and edits, moves between phases, status changes, agent verdicts, re-runs and overrides, judge scores (including scores entered by an organizer), inbox decisions, final ranking and awards. Entries for prizes the project still holds are highlighted.
+
+To add your own note, type it in **Add a note to the trail…** and click **Add note**, or press <Kbd>⌘Enter</Kbd>.
+
+## Related
+
+<Cards>
+<Card href="/docs/judging/projects" title="Projects" icon="table">Every project, with filters and bulk moves.</Card>
+<Card href="/docs/judging/inbox" title="Failed inbox" icon="inbox">Decide on projects the agent failed on a gate.</Card>
+<Card href="/docs/setup/criteria" title="Criteria" icon="check-list">What the agent and judges score, and how.</Card>
+<Card href="/docs/results/winners" title="Winners" icon="crown">Final rankings and award picks.</Card>
+</Cards>

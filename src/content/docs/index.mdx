@@ -1,0 +1,56 @@
+RoundZero runs the judging side of a hackathon. You describe what teams submit and how projects are scored, collect the projects, and let an AI agent and your human judges review them round by round. When the last round closes, you pick the winners and publish them on a public page.
+
+You host RoundZero yourself: it's a Next.js app on your own Supabase project. See [Deployment](/docs/reference/deployment) to set one up.
+
+## From setup to winners
+
+Every hackathon has three areas, and the switch at the top of a hackathon moves between them. A hackathon's stage tracks where it is. It starts in Setup, moves to Judging when you start judging, and moves to Results when the last phase closes.
+
+| Area | What you do there | Pages |
+| --- | --- | --- |
+| **Setup** | Decide what teams submit, what projects are scored on, who judges, and how judging runs. | Schema, Criteria, Judges, Phases, Distribution, Judge portal, Branding, General |
+| **Judging** | Collect projects, start judging, follow the agent and the judges, and close each phase. | Projects, Progress, Rewards, Chat |
+| **Results** | Check the final ranking, pick award winners, publish the winners page, and email the results. | Winners, Emails, Public page |
+
+A typical run:
+
+1. You create the hackathon and adjust its default schema, criteria and phases.
+2. Projects come in: you add them by hand, teams use a public submission form, or a script sends them through the [Intake API](/docs/reference/intake-api).
+3. You click **Start judging**. Every project enters the first phase, the agent reviews each one against your criteria, and judges get their assignments.
+4. Judges score their projects from a private link. You close each phase when it's done, and the top projects move on.
+5. Closing the last phase ranks the projects. You set prizes, pick award winners and click **Publish results**.
+
+The [Quickstart](/docs/quickstart) walks through these steps with links to each page.
+
+## Who uses which page
+
+Only organizers have accounts. Everyone else reaches RoundZero through a link.
+
+| Who | What they do | Where |
+| --- | --- | --- |
+| Organizers | Sign in, set up and run hackathons, publish results. | `/`, `/new`, `/h/[slug]/…`, `/settings` |
+| Judges | Review and score the projects assigned to them. No account needed. | Their private link, `/j/[token]` |
+| Submitters | Submit their team's project through a public form. | The form link, `/f/[token]` |
+| The public | See the winners once results are published. | The winners page, `/w/[slug]` |
+
+Scripts and other systems can also create projects through `/api/intake` with an API key.
+
+## The agent and the judges
+
+Each criterion names the mechanisms the agent uses to check it: reading the repo, running it in a sandbox, reviewing the demo video, visiting the live site, or scoring the submission against the rubric. The agent scores every project on the same criteria your judges use, so judges start with evidence in hand.
+
+Rankings put the judges' average score ahead of the agent's score, and the agent's score can stay hidden from a judge until they submit their own. When the agent fails a project on a must-pass criterion (a gate), the project waits in an inbox for a person to agree or overturn the call.
+
+## Explore the docs
+
+<Cards>
+  <Card href="/docs/quickstart" title="Quickstart" icon="play">Run one hackathon from creation to published winners.</Card>
+  <Card href="/docs/concepts" title="Key concepts" icon="notebook">Phases, gates, assignments and the other terms the app uses.</Card>
+  <Card href="/docs/sponsors" title="Hackathon sponsors" icon="heart">Nebius, NVIDIA, Tavily and Devpost, and what each does in RoundZero.</Card>
+  <Card href="/docs/workspace/hackathons" title="Workspace" icon="grid">Your hackathons, creating one, and signing in.</Card>
+  <Card href="/docs/setup/schema" title="Setup" icon="list">Schema, criteria, judges, phases and distribution.</Card>
+  <Card href="/docs/judging/projects" title="Judging" icon="eye">Projects, progress, rewards and chat.</Card>
+  <Card href="/docs/results/winners" title="Results" icon="trophy">Final rankings, winners and publishing.</Card>
+  <Card href="/docs/links/judge-portal" title="Shared links" icon="link">Judge links, the submission form and the winners page.</Card>
+  <Card href="/docs/reference/deployment" title="Reference" icon="code">Intake API, configuration and deployment.</Card>
+</Cards>

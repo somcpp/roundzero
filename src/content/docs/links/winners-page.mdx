@@ -1,0 +1,67 @@
+<PageInfo path="/w/[slug]" access="public" nav="Results › Public page" />
+
+The winners page is a public page that announces your hackathon's results: the podium, the award winners and the full final ranking. Anyone with the link can read it once you publish results, without signing in. Winner emails link to it, and you can share it anywhere.
+
+## When it's visible
+
+The page is private until you publish.
+
+| State | Who can see it |
+| --- | --- |
+| Not published | Only you, signed in as the hackathon's owner. A banner at the top reads "Preview — only you can see this page until you publish results." Everyone else gets a not-found page. |
+| Published | Anyone with the link. |
+
+You publish and unpublish from [Results › Winners](/docs/results/winners), and you can only publish once the last phase has closed. Unpublishing makes the page private again. **Reset judging** also unpublishes it.
+
+To open the page, use **Results › Public page** in the hackathon's navigation, or the **Public page** button on the Winners page once results are published. Both open it in a new tab.
+
+## What it shows
+
+The page uses your hackathon's color, logo and banner from [Branding](/docs/setup/branding).
+
+- **Header**: the logo, the hackathon's name and a **Share** button.
+- **Banner**: "Winners", the hackathon's name, and the number of projects and judges with the event dates.
+- **Podium**: the top three projects, first place in the middle. Each shows its name, pitch, prizes, and **Repo** and **Demo** links when it has them. First place also shows the team size and, if the project has a video, a button to watch it.
+- **Category winners**: each award with at least one winner, with the award's image, name, winners and description.
+- **All N finalists**: the full final ranking, with each project's place, name, pitch, prizes and team size.
+
+Before any winners exist, the page shows **Winners are on their way** with a note that the judges are still deciding. You'll see this in the preview while judging runs, unless you've already picked some award winners.
+
+### Where the details come from
+
+The page picks project details from your [schema](/docs/setup/schema):
+
+| On the page | Taken from |
+| --- | --- |
+| Name | The first **Text** field |
+| Pitch | The next **Text** or **Long text** field |
+| Team size | The first **Team** field, shown as "solo" or "team of 3" |
+| **Repo** link | The first **Repo** field |
+| **Demo** link | The first **URL** field |
+| Video button | The first **Video** field |
+
+Only web links (`http` or `https`) are shown.
+
+## What stays private
+
+The page shows only what's needed to announce the winners:
+
+- Only projects in the final ranking or with an award appear. The project and judge counts in the banner cover the whole hackathon.
+- Disqualified projects never appear.
+- Judges' scores and notes aren't shown.
+- Prizes appear by name. Codes and links inside a prize go only to the winner, in their [winner email](/docs/results/emails).
+
+## Share the page
+
+**Share** copies the page's link and briefly shows **Link copied**. On devices where copying isn't available, it opens the device's share sheet instead.
+
+The page reads the ranking and awards each time it loads, so changes you make on the Winners page after publishing show up there. To link to one project, add its anchor to the link: `#project-12` for project #012 scrolls to its place on the page. Once results are published, a winning project's page in the app links here too.
+
+## Related
+
+<Cards>
+  <Card href="/docs/results/winners" title="Winners" icon="crown">Finalize the ranking and awards, then publish this page.</Card>
+  <Card href="/docs/results/emails" title="Winner emails" icon="mail">The emails that link winners to this page.</Card>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">The color, logo and banner the page uses.</Card>
+  <Card href="/docs/judging/rewards" title="Rewards" icon="gift">The prize tiers and awards the page lists.</Card>
+</Cards>

@@ -1,0 +1,61 @@
+<PageInfo path="/h/[slug]/setup/portal" access="organizer" nav="Setup › Judge portal" />
+
+The judge portal is what a judge sees when they open their private link. This page sets the words on its start and finish screens, shows a live preview, and lists every judge's link in one place.
+
+The page has two tabs: **Portal settings** and **Judge links**.
+
+## Portal settings
+
+Everything here is optional. Leave it blank and judges still get a working portal with a greeting, their queue and the criteria.
+
+| Field | What it does |
+| --- | --- |
+| **Headline** | The big heading on the start screen. `{name}` becomes the judge's first name, as in `Welcome, {name}`. Leave it empty to greet each judge with "Welcome" and their first name. Up to 120 characters. |
+| **Welcome message** | A note from the organizers under the headline. Up to 2,000 characters. |
+| **Remember the goal** | Up to 8 short points judges read before they start, 200 characters each. Click **Add a goal** to add one. You don't need to repeat the criteria: judges see those anyway. |
+| **When they finish** | A message on the finish screen, such as when winners are announced. Up to 1,000 characters. |
+
+Click **Update** in the page header to save. Empty goals are dropped when you save. A dot on the **Portal settings** tab means you have unsaved changes.
+
+The **Welcome message** and goals also appear in the email judges get with their link when a phase starts, if email is set up on your server.
+
+## Preview
+
+The preview beside the form updates as you type. Switch between **Start** and **Finish** to see each screen. It uses your first judge's first name, a few of your real project names, the running phase (or the first one before judging starts) and your cadence from [Distribution](/docs/setup/distribution).
+
+## What judges see
+
+The start screen shows, from top to bottom:
+
+- The phase and round, such as "Group review · round 1 of 2".
+- Your **Headline**.
+- How many projects they have to judge. With daily batches, it counts today's and says how many more open over the coming days.
+- Your **Welcome message** and **Remember the goal** points.
+- A **Start judging** button (**Keep going** once they've begun), with a time estimate of about 4 minutes per project.
+- **What you'll score**: each criterion with its weight and rubric. Pass/fail criteria are marked **pass / fail**, and gates **must pass**.
+- Their projects, with a check and score next to each one they've done.
+
+The finish screen appears once they've scored everything open to them. It thanks them, shows your **When they finish** message and lists their scores. With batches still to come, it offers the next batch early. Otherwise it tells them they can still change a score until you close the round.
+
+For how judges score from there, see [the judge's page](/docs/links/judge-portal).
+
+## Judge links
+
+The **Judge links** tab lists every judge with their link, `/j/<token>`, and buttons to copy it, open it, or make a **New link**. The count on the tab is how many judges have a link.
+
+- A link opens only that judge's queue, and anyone who has it can score as them. Send each one directly.
+- If a link leaks, click **New link** and confirm. The old link stops working straight away.
+- The same link works in every phase. It shows whatever that judge has in the phase that's running.
+
+**Copy all links** copies one line per judge with their name, email and full link, separated by tabs, ready to paste into a spreadsheet.
+
+To add judges, go to [Judges](/docs/setup/judges). Each one gets a link when you save them.
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/judges" title="Judges" icon="users">Add judges and manage each one's link.</Card>
+  <Card href="/docs/setup/criteria" title="Criteria" icon="check-list">The rubric judges see on the start screen.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">Queues, daily batches and the agent score reveal.</Card>
+  <Card href="/docs/links/judge-portal" title="The judge's page" icon="link">The portal from the judge's side.</Card>
+</Cards>

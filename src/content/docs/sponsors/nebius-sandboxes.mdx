@@ -1,0 +1,53 @@
+[Nebius Sandboxes](https://docs.tokenfactory.nebius.com/sandboxes/overview) run the code teams submit. Running strangers' code is the hardest part of judging a hackathon: every repo has its own dependencies and build steps, and none of it can be trusted. Sandboxes give each repo a VM-isolated Linux machine, so the agent can install, build and test it without touching anything else.
+
+Sandboxes are in beta. RoundZero talks to them through the Sandboxes API on Token Factory.
+
+## Where it's used
+
+| Feature | What the sandbox does |
+| --- | --- |
+| **Sandbox run** mechanism | Clones the repo, then installs, builds and runs the tests, or runs the organizer's own **Sandbox commands**. See [Criteria](/docs/setup/criteria#agent-tab). |
+| The agent's `runCommand` tool | On the Balanced and In-depth tiers, with **Sandbox run** on, the agent runs its own commands to check a claim. |
+| Very large repos | The agent normally reads code from a download of the repo. When a repo is too large for that, it reads the sandbox clone instead, without starting a VM. |
+
+**Sandbox run** needs a repo link in the criterion's inputs. It reads GitHub, GitLab, Bitbucket and Codeberg links.
+
+## How a repo runs
+
+Every command in a sandbox runs on an image and produces a new one, like a commit.
+
+1. **Clone once.** The repo is cloned onto the base image, a Debian bookworm machine with Node 22, npm, corepack, git, curl and python3. Cloning has 4 minutes.
+2. **Fork per step.** Each review step starts from its own copy of the cloned image. A step's installs and builds carry over between its own commands, and never reach another step's.
+3. **Run commands.** Commands run as root in the repo's folder, with network access. With no **Sandbox commands**, the agent works out install, build and test steps from the repo's stack. Otherwise it runs the first 8 of yours in order, with 5 minutes each.
+4. **Read without a VM.** Searching and reading files in a cloned image goes through the inspect API, so looking around is fast and cheap.
+
+Every command, its output and its exit code are logged on the review step, so an organizer can see exactly what ran on the [project page](/docs/judging/project).
+
+<Callout type="note" title="The repo's URL never goes into a command">
+
+The repo URL and branch go into the sandbox as environment variables, never spliced into the shell command. A repo name can't inject a command.
+
+</Callout>
+
+## When the code can't run
+
+If the repo doesn't exist or isn't public, the clone fails with "The repo doesn't exist or isn't public." and git's own message. A clone that runs past its time limit fails with "Cloning timed out."
+
+Either way, the step notes "Didn't run the code" with the reason, and the review carries on. The agent judges the code from reading it, and lowers its confidence on anything that needs the code to run.
+
+## Set it up
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `NEBIUS` | None | The Token Factory API key. Sandboxes use the same key as the models. |
+| `NEBIUS_PROJECT_ID` | None | The Nebius project sandboxes run in. `NEBIUS_AI_PROJECT` works as a fallback name. |
+| `NEBIUS_SANDBOX_URL` | `https://api.tokenfactory.nebius.com/sandboxes` | The Sandboxes API. |
+| `NEBIUS_SANDBOX_IMAGE` | `node:22-bookworm`, imported once | The image repos are cloned onto: an image UUID, a tag, or a `docker://` reference to import. |
+
+Without `NEBIUS` or `NEBIUS_PROJECT_ID`, the code doesn't run, and the step notes which one is missing. The agent still reads the code and scores it.
+
+## Related
+
+- [Nebius Token Factory](/docs/sponsors/nebius-token-factory)
+- [Criteria › Agent tab](/docs/setup/criteria#agent-tab)
+- [Configuration › AI models and sandboxes](/docs/reference/configuration#ai-models-and-sandboxes)

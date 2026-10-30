@@ -1,0 +1,113 @@
+<PageInfo path="/h/[slug]/setup/schema" access="organizer" nav="Setup › Schema" />
+
+The schema decides what entrants hand in: a repo, a demo video, a team list, a written overview, or anything else you need. Each field is a **block**. The submission form, the intake API, project pages and the agent all read from the same list, and the order here is the order on the form.
+
+Set the schema up before projects come in. Once judging starts, most of it locks.
+
+## What you start with
+
+Every new hackathon starts with six blocks. Edit, reorder or remove any of them.
+
+| Block | Type | Expected |
+| --- | --- | --- |
+| Title | Text | Short and memorable |
+| Description | Text | One sentence |
+| Video | Video | ≤ 3 min |
+| Images | Image | Up to 5 images |
+| Overview | Long text | The full project story |
+| GitHub | Repo | Agents can clone this |
+
+## Block types
+
+| Type | What entrants enter |
+| --- | --- |
+| **Text** | One line of text. |
+| **Long text** | Several paragraphs in a larger text box. |
+| **Number** | A number. |
+| **URL** | One link, such as a live demo. |
+| **Video** | One link to a demo video. |
+| **Repo** | One link to the code repository. |
+| **File** | Links to files, one per line. |
+| **Select** | One short answer in a single-line input. |
+| **Image** | Links to images, one per line. |
+| **Team** | Team members, one per line. |
+
+A few rules apply to every submission, whether it comes from the form or the API:
+
+- Link fields (**URL**, **Video**, **Repo**) take a single link with no spaces. A link typed without `https://` gets it added.
+- List fields (**File**, **Image**, **Team**) take up to 50 entries.
+- **Number** fields reject anything that isn't a number.
+
+## Add and edit blocks
+
+<Steps>
+
+### Add a block
+
+Hover the gap between two blocks and click **+** to pick a type and insert it there. Click **add block** at the bottom of the list to add a **Text** block at the end.
+
+### Fill in the drawer
+
+A new block opens in a drawer on the right. Click any existing block to open it the same way.
+
+### Put blocks in order
+
+Drag a block by its grip handle. On a phone, use the up and down arrows instead.
+
+### Click Update
+
+Changes aren't saved until you click **Update** in the page header. Until then the header shows **Unsaved changes**.
+
+</Steps>
+
+The drawer has four fields:
+
+| Field | What it does |
+| --- | --- |
+| **Title** | The field's label on the form. Required, up to 120 characters. |
+| **Type** | One of the types above. |
+| **Description** | Shown to entrants under the field, so they know what to provide. Up to 2,000 characters. |
+| **Expected** | What a good answer looks like. Entrants see it beside the field's label, and the agent reads it when it checks each submission. Up to 2,000 characters. |
+
+To remove a block, click the trash icon in the drawer footer and confirm **Remove block**. Entrants stop seeing the field, and criteria that read it stop using it once you click **Update**.
+
+<Callout type="note" title="Titles are API keys">
+
+The [intake API](/docs/reference/intake-api) names each field after its block's title, so a block called `GitHub repo` takes the key `github_repo`. Renaming a block renames its key. If a script sends projects to the API, update it after a rename.
+
+</Callout>
+
+## The project's name
+
+The schema has no fixed name field. Instead, the first **Text** block in form order is the project's name. It's the one required field on the submission form, and the app uses it wherever it names a project: lists, judges' queues and emails. The next **Text** or **Long text** block becomes the project's one-line pitch. In the starter schema, those are **Title** and **Description**.
+
+<Callout type="tip">
+
+If you add a **Text** block above your name block, the new block becomes the name. Keep the name as the first **Text** block.
+
+</Callout>
+
+A project with no name shows as its number, such as `Project #007`.
+
+## How criteria read blocks
+
+Each criterion picks the blocks it reads on its **Inputs** tab, so a repo block can feed a sandbox run and a video block the video reviewer. See [Criteria](/docs/setup/criteria).
+
+The agent sorts links by what they point at, not only by the block they came in. A GitHub link in a **URL** block still gets read as a repo, and a YouTube, Vimeo or Loom link in a **URL** block still gets treated as a video.
+
+## After judging starts
+
+<Callout type="warning" title="Only titles can change">
+
+Projects were submitted against this schema, and the agent checks them against it. Once judging starts you can still rename blocks, but you can't add, remove, reorder or retype them, or edit **Description** and **Expected**. To change those, reset judging from [Progress](/docs/judging/progress) first.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/criteria" title="Criteria" icon="check-list">Choose which blocks each criterion reads.</Card>
+  <Card href="/docs/links/submission-form" title="Submission form" icon="globe">The public form entrants fill in, built from this schema.</Card>
+  <Card href="/docs/reference/intake-api" title="Intake API" icon="code">Send projects in from your own system.</Card>
+  <Card href="/docs/judging/projects" title="Projects" icon="table">Every submitted project and its values.</Card>
+</Cards>

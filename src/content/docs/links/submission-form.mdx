@@ -1,0 +1,70 @@
+<PageInfo path="/f/[token]" access="submitter" nav="Judging › Projects › Submission form" />
+
+The submission form is a public page where teams enter their own project. You turn it on, share its link, and each submission shows up on your [Projects](/docs/judging/projects) page straight away. Submitters don't need an account. The form is off until you switch it on.
+
+## Turn on the form
+
+<Steps>
+
+### Open the form settings
+
+Go to **Judging › Projects** and click **Submission form**. A dot on the button means the form is on.
+
+### Switch it on
+
+Turn on **Accept submissions**. The first time you do this, RoundZero makes the form's link.
+
+### Copy the link
+
+Under **Public link**, copy the link, or click **Open form** to see the page as submitters do. Share the link wherever your teams will find it.
+
+</Steps>
+
+The drawer also lists the fields under **Entrants fill in**, with a link to edit them in **Setup › Schema**.
+
+<Callout type="note" title="Server not set up for outside submissions">
+
+If the drawer says this server can't take outside submissions yet, the server is missing `SUPABASE_SECRET_KEY`. Until it's set, the form page says it isn't available yet. See [Configuration](/docs/reference/configuration).
+
+</Callout>
+
+## What submitters see
+
+The page uses your hackathon's color, logo and banner from [Branding](/docs/setup/branding). It shows **Project submission**, the hackathon's name and its tagline, then the form.
+
+The form has one field for each block in your [schema](/docs/setup/schema), in the same order. Each field shows the block's title, its expected-answer hint and its description.
+
+- The first **Text** field is the project's name. It's required and marked with an asterisk. Every other field is optional.
+- **Long text** fields are large text boxes.
+- **Image**, **File** and **Team** fields are multi-line boxes: one entry per line. Images and files are links, not uploads.
+- **URL**, **Video** and **Repo** fields take a single link. A link typed without `https://` gets it added.
+
+Submitters click **Submit project**. If something is wrong, such as a missing name or more than one link in a link field, the form shows the error and keeps what they typed. Once it goes through, they see **Project submitted** and the project's number, for example "It's in as project #012." A **Submit another project** button clears the form for a new entry.
+
+## What happens to a submission
+
+Each submission becomes a new project on your Projects page, numbered after the last one. Its audit trail records that it came in through the submission form. Empty fields are dropped.
+
+<Callout type="warning">
+
+If judging has already started, new submissions aren't in any phase. Move them into one if you want them judged.
+
+</Callout>
+
+## Close the form or replace the link
+
+- **Close it**: turn off **Accept submissions**. Anyone opening the link sees **Submissions are closed**, with a note to check with the organizers for the current link. Turn it back on and the same link works again.
+- **Replace the link**: click **New link** and confirm with **Make new link**. The old link stops working straight away, so share the new one with your teams.
+
+### Spam protection
+
+Each visitor can submit 5 projects every 10 minutes, and a hidden field catches most bots. If the link gets abused, make a new link or switch the form off.
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/schema" title="Schema" icon="table">The fields the form asks for.</Card>
+  <Card href="/docs/judging/projects" title="Projects" icon="list">Where submissions land, and other ways to add projects.</Card>
+  <Card href="/docs/reference/intake-api" title="Intake API" icon="code">Import projects from a script or a spreadsheet instead.</Card>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">The color, logo and banner the form uses.</Card>
+</Cards>

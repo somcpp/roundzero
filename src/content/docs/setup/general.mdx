@@ -1,0 +1,56 @@
+<PageInfo path="/h/[slug]/setup/general" access="organizer" nav="Setup › General" />
+
+General holds the hackathon's basics: its name, tagline and dates, which stage it's in, whether the winners page is public, and the option to delete it. The page header shows the hackathon's admin address, `/h/<slug>`.
+
+## Details
+
+| Field | What it does |
+| --- | --- |
+| **Name** | Required, up to 120 characters. It's the same name you can edit on [Branding](/docs/setup/branding). |
+| **Tagline** | Optional, up to 200 characters. It shows on your hackathon list and the submission form. The agent also reads the name and tagline for context when it judges. |
+| **Dates** | The start and end dates. The end can't be before the start. They show on your hackathon list and the winners page. |
+| **Stage** | **Setup**, **Judging** or **Results**. See below. |
+| **Winners page is public** | Makes the public winners page, `/w/<slug>`, visible to anyone. See below. |
+
+Click **Save changes** to save. **Saved** appears next to the button when it's done.
+
+## The hackathon's URL
+
+The slug in `/h/<slug>`, `/w/<slug>` and the other addresses comes from the name you gave the hackathon when you created it. If another hackathon already had that slug, a short random suffix was added. Renaming the hackathon later doesn't change its slug, so links you've shared keep working.
+
+## Stage
+
+The app moves the stage for you as judging goes along:
+
+| When you… | Stage becomes |
+| --- | --- |
+| Start judging on [Progress](/docs/judging/progress) | **Judging** |
+| Close the last phase | **Results** |
+| Reset judging | **Setup** |
+
+The stage decides which area opens when you go to `/h/<slug>`, the badge on your hackathon list, and whether you can publish results from [Winners](/docs/results/winners), which needs **Results**. You can also set it by hand here.
+
+## Winners page
+
+**Winners page is public** is the same switch as **Publish results** on [Winners](/docs/results/winners). There's one difference: **Publish results** only works once the last phase has closed, and this checkbox doesn't check.
+
+Publishing makes the page public. It doesn't send any emails: you send those separately from [Winner emails](/docs/results/emails). Resetting judging takes the page down again.
+
+## Delete the hackathon
+
+Under **Danger zone**, click **Delete** and confirm **Delete hackathon**. This removes the hackathon for everyone, including its public winners page, and takes you back to your hackathon list.
+
+<Callout type="warning">
+
+Deleting a hackathon can't be undone.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">Logo, color and banner.</Card>
+  <Card href="/docs/judging/progress" title="Progress" icon="chart-line">Start judging, close phases and reset.</Card>
+  <Card href="/docs/results/winners" title="Winners" icon="crown">The final ranking and the Publish results button.</Card>
+  <Card href="/docs/links/winners-page" title="Winners page" icon="trophy">The public page this checkbox controls.</Card>
+</Cards>

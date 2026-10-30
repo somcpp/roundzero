@@ -1,0 +1,120 @@
+<PageInfo path="/h/[slug]/setup/criteria" access="organizer" nav="Setup › Criteria" />
+
+Criteria are the lines on your rubric. For each one you set how it's scored, how much it counts, which schema blocks it reads, and how the agent checks it. The agent scores every project against each criterion, and judges score the same criteria from their private links.
+
+Settle your criteria before judging starts. After that, only their titles can change.
+
+## What you start with
+
+Every new hackathon starts with four criteria. All four use the **Balanced** model and come with written agent guidance you can edit.
+
+| Criterion | Weight | Checked by | Reads |
+| --- | --- | --- | --- |
+| Technical execution | 30% | Sandbox run, Code scraper, Agent judge | The Repo block. Scores 0 if it's empty. |
+| Video: problem & solution | 25% | Video reviewer | The Video block. Scores 0 if it's empty. |
+| Impact | 25% | Agent judge, Web scraper | All inputs |
+| Originality & design | 20% | Agent judge | All inputs |
+
+## The criteria list
+
+Each row shows the criterion's title, icons for its mechanisms, a **pass/fail** or **gate** badge when it applies, and its weight.
+
+- To add a criterion, hover the gap between two rows and click **+**, or click **add criterion** at the bottom.
+- To reorder, drag a row by its grip handle (or use the arrows on a phone). Judges see criteria in this order.
+- To edit, click a row. Its settings open in a drawer with three tabs: **Scoring**, **Inputs** and **Agent**.
+- To remove, click the trash icon in the drawer footer and confirm **Remove criterion**.
+
+Nothing is saved until you click **Update** in the page header.
+
+The **Total weight** bar in the sidebar adds up every criterion's weight. It turns red and shows **Weights should add to 100%** when the total is anything else. It's a warning, not a block: you can still save.
+
+A new criterion starts as **Score 1–10** at 0% weight, reading **All inputs**, checked by **Agent judge** on the **Balanced** model.
+
+## Scoring tab
+
+| Setting | What it does |
+| --- | --- |
+| **Scale** | **Score 1–10**, or **Pass / fail**. |
+| **Weight** | The criterion's share of the total, from 0 to 100% in steps of 5. |
+| **Description** | The rubric: what a great project looks like here. Judges see it on their start screen, and the agent scores against it. Up to 2,000 characters. |
+| **Gate eligibility** | Only on pass/fail criteria. Failing it makes the project ineligible, whatever its other scores. Judges see it marked **must pass**. |
+
+A review's total is a weighted average out of 10. On pass/fail criteria a pass counts as 10 and a fail as 0.
+
+## Inputs tab
+
+**Inputs** decides which schema blocks the criterion reads. Leave it on **All inputs** for criteria about the whole project, or click blocks to pick specific ones.
+
+**If inputs are missing** sets what happens when a project leaves those blocks empty:
+
+- **Judge what's there**: the agent scores what was submitted and says what's missing.
+- **Score 0**: if none of the inputs are filled in, the criterion scores 0 (or a fail, on pass/fail) without running a model. If the criterion is a gate, the project is also flagged for a person, since it failed only because something was missing.
+
+**Mechanisms** are how the agent gathers evidence. Pick one or more.
+
+| Mechanism | What it does |
+| --- | --- |
+| **Agent judge** | A model reads the inputs and scores against the rubric. |
+| **Sandbox run** | Clones and builds the repo, and runs its tests. |
+| **Video reviewer** | Checks the video's transcript, scenes and length. |
+| **Code scraper** | Searches the repo for imports and call sites. |
+| **Web scraper** | Visits the live demo and captures its pages. |
+| **Human only** | No agent score. Judges only. |
+
+**Sandbox run** and **Code scraper** need a repo link somewhere in the criterion's inputs. They read GitHub, GitLab, Bitbucket and Codeberg links.
+
+## Agent tab
+
+These settings steer the agent on this criterion. If **Human only** is the only mechanism, the tab says the agent skips the criterion and shows no settings.
+
+| Setting | What it does |
+| --- | --- |
+| **What to look for** | Instructions the agent follows, in your words. Up to 4,000 characters. |
+| **Model** | How large a model the agent uses, and how much it checks on its own. The page shows which model each tier runs on right now. |
+| **Look for in the repo** | Shown with **Code scraper** or **Sandbox run**. Packages, imports, API calls or keywords, one per entry, up to 30. The agent searches the whole repo for each and reports where it's used, rather than only installed. |
+| **Sandbox commands** | Shown with **Sandbox run**. Optional shell commands, one per line, run in order in a Nebius sandbox with the repo cloned. Leave it empty and the agent works out install, build and test itself. |
+| **Double-check** | When a second pass, one tier up, re-checks the verdict. |
+
+The three **Model** tiers:
+
+- **Quick**: small, fast model. One pass over what the mechanisms found.
+- **Balanced**: checks a few things itself with tools before it scores.
+- **In-depth**: largest model, with room to dig. More tool calls, slower.
+
+The three **Double-check** options:
+
+- **Off**: take the first verdict.
+- **When unsure** (the default): a second pass re-checks verdicts with low confidence, flags, or a failed gate.
+- **Always**: a second pass re-checks every verdict.
+
+The second pass runs one tier up: Quick is re-checked on Balanced, and Balanced on In-depth. In-depth is already the top tier, so it's re-checked on In-depth again.
+
+When the two passes disagree, the criterion is flagged for a person.
+
+To steer the agent on a single project, open its [project page](/docs/judging/project). You can re-run the review there with extra direction or a different model tier.
+
+## Gates
+
+A gate is a pass/fail criterion with **Gate eligibility** on. A project can fail a gate in two ways, and [Distribution](/docs/setup/distribution) decides what happens in each:
+
+- **The agent fails it.** With **Agent first** on, the **Agent-failed inbox** setting decides who confirms or overturns the failure. See [Failed inbox](/docs/judging/inbox).
+- **Judges fail it.** The **Failed gates** rule either flags the project for you or rules it out after enough failing reviews.
+
+A project ranks below every project that passed its gates when the agent's failure stands, or when judges' reviews rule it out.
+
+## After judging starts
+
+<Callout type="warning" title="Only titles can change">
+
+Reviews already in were scored against these settings. Once judging starts you can rename criteria, but you can't add, remove or reorder them or change any tab. To change them, reset judging from [Progress](/docs/judging/progress) first.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/schema" title="Schema" icon="table">The blocks criteria read as inputs.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">Agent first, the inbox and the failed gates rule.</Card>
+  <Card href="/docs/judging/inbox" title="Failed inbox" icon="inbox">Projects the agent stopped at a gate.</Card>
+  <Card href="/docs/judging/project" title="Project detail" icon="spark">Read the agent's review and re-run it.</Card>
+</Cards>

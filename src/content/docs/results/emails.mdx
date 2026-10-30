@@ -1,0 +1,77 @@
+<PageInfo path="/h/[slug]/results/emails" access="organizer" nav="Results › Emails" />
+
+The Winner emails page shows the email each winning project gets. There's one email per project, and it lists everything that project won: its rank prizes and any awards. Use this page to check each email before results go out.
+
+<Callout type="note" title="Preview only">
+
+This page previews the emails. It doesn't send them, and neither does publishing results. Send them from the **Results emails** panel on the Winners page: see [Results emails](/docs/results/winners#results-emails).
+
+</Callout>
+
+## Who gets an email
+
+Every project that wins something gets one email, however many prizes it collects. The list on the left shows each one with:
+
+- Its final place, or **—** for a project that only won an award.
+- Its name.
+- A badge with the first prize it wins.
+
+Click a project to preview its email on the right.
+
+The header counts the emails and shows the sender. Until the last phase closes, the list comes from the projected ranking, and the header says **preview from the projected ranking**. Places and prizes can still change until then. See [Winners](/docs/results/winners) for how the ranking becomes final.
+
+If nobody wins anything yet, the page says so and offers a **Set up rewards** button.
+
+## What's in the email
+
+The preview shows the envelope first:
+
+- **From**: the sender name from the email settings, or the hackathon's name if you haven't set one.
+- **To**: the project's team.
+- **Subject**: "You won" followed by the project's first prize and the hackathon's name.
+
+The body uses your hackathon's banner, logo and color from [Branding](/docs/setup/branding), then shows:
+
+1. The title. By default it's "Congrats, " followed by the project's name.
+2. The description. If you leave it blank, the email says where the judges ranked the project out of all finalists. For an award-only winner, it names the awards instead.
+3. Each prize tier the project wins, with its image, name, description and items. Codes and credits show their value. Links, files and images show as links to open.
+4. The fine print, if you wrote any.
+5. A button, if you set a link for it.
+6. A link to the public [winners page](/docs/links/winners-page).
+
+<Callout type="tip">
+
+Reward codes and links appear only in the winner's own email. The public winners page shows prize names, never the codes.
+
+</Callout>
+
+## Edit the email
+
+The copy is shared by every winner's email. You edit it on the **Winner email** tab of [Rewards](/docs/judging/rewards), which shows a live preview as you type.
+
+| Field | What it sets |
+| --- | --- |
+| **From name** | The sender name. Blank uses the hackathon's name. |
+| **Title** | The heading at the top of the email. |
+| **Description** | The paragraph under the title. Blank uses the ranking sentence described above. |
+| **Button** | A link and its label. Without a link, the email has no button. |
+| **Fine print** | Small text under the rewards, such as terms or claim deadlines. |
+
+In the title and description, you can use these placeholders:
+
+| Placeholder | Fills in |
+| --- | --- |
+| `{project}` | The project's name |
+| `{hackathon}` | The hackathon's name |
+| `{rank}` | The project's final place, or "–" for an award-only winner |
+
+What each project wins comes from the tiers on the **Prizes** tab of the same page. To change a prize's items, edit the tier there. Projects that didn't win get a separate thank-you email, set up on the **Thank-you email** tab.
+
+## Related
+
+<Cards>
+  <Card href="/docs/results/winners" title="Winners" icon="crown">Finalize the ranking and award winners these emails are built from.</Card>
+  <Card href="/docs/judging/rewards" title="Rewards" icon="gift">Edit the prize tiers and the winner email copy.</Card>
+  <Card href="/docs/links/winners-page" title="Winners page" icon="globe">The public page every winner email links to.</Card>
+  <Card href="/docs/setup/branding" title="Branding" icon="paint-brush">The banner, logo and color the emails use.</Card>
+</Cards>

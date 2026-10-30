@@ -1,0 +1,59 @@
+[Nebius Token Factory](https://tokenfactory.nebius.com/) serves every model RoundZero calls. It speaks the OpenAI API, so the app reaches the NVIDIA Nemotron models, the vision models and the embedding model through one client and one key.
+
+## Where it's used
+
+| Feature | What Token Factory serves |
+| --- | --- |
+| Agent reviews | The Nemotron model for each criterion's tier, with tool calling on Balanced and In-depth. See [Criteria](/docs/setup/criteria#agent-tab). |
+| Double checks | The same evidence judged again, one tier up. |
+| Project summaries | A short note on each project's strengths and what to improve, written after its review. |
+| Images | A vision model describes screenshots and other images, and a Nemotron model does the judging. |
+| [Chat](/docs/judging/chat) | Fast and Smart answers, and the Qwen3 embeddings behind its project search. |
+
+## Verdicts in an exact shape
+
+Token Factory enforces JSON schemas with guided decoding. RoundZero sends each verdict's schema as a real `json_schema`, so every answer comes back in the shape the app stores:
+
+- a score or a pass/fail
+- a confidence
+- the reasoning
+- evidence with sources like `src/agent.ts:42` or `video 1:12`
+- feedback for the team
+- any flags, such as a prompt injection in the submission
+
+The app never has to repair or re-ask for a malformed verdict.
+
+## Models
+
+| Use | Default model | Variable |
+| --- | --- | --- |
+| Quick tier, Chat's **Fast** mode | `nvidia/Nemotron-3_5-Lightning` | `NEBIUS_QUICK_MODEL` |
+| Balanced tier, Chat's **Smart** mode, summaries | `nvidia/nemotron-3-super-120b-a12b` | `NEBIUS_CHAT_MODEL` |
+| In-depth tier | `nvidia/Nemotron-3-Ultra-550b-a55b` | `NEBIUS_DEEP_MODEL` |
+| Images on Balanced and In-depth | `deepseek-ai/DeepSeek-V4.1-Flash` | `NEBIUS_VISION_MODEL` |
+| Images on Quick | `openbmb/MiniCPM-V-4_5` | `NEBIUS_VISION_QUICK_MODEL` |
+| Chat search embeddings | `Qwen/Qwen3-Embedding-8B` at 1,024 dimensions | Fixed in code |
+
+Set a variable to swap a model without changing code. The embedding model is fixed because its size must match the database's vector column. [NVIDIA Nemotron](/docs/sponsors/nvidia) covers the three tiers in more detail.
+
+<Callout type="note" title="Why images use other vision models">
+
+Nebius retired its NVIDIA multimodal models from serverless on August 31, 2026. Images go to the vision models it still serves, which only describe what they see. Point `NEBIUS_VISION_MODEL` at an NVIDIA vision model, such as one on a dedicated endpoint, to swap it back in.
+
+</Callout>
+
+## Set it up
+
+1. Create an API key in Nebius Token Factory.
+2. Set it as `NEBIUS` in `.env.local`, or in your host's environment variables in production.
+3. Restart the dev server or redeploy.
+
+Without `NEBIUS`, agent reviews, chat and sandboxes don't run. The rest of the app works. The same key runs [Nebius Sandboxes](/docs/sponsors/nebius-sandboxes), which also need `NEBIUS_PROJECT_ID`.
+
+The client points at `https://api.tokenfactory.nebius.com/v1`. Every call runs on the Nebius account whose key you set, so a company that self-hosts RoundZero keeps its model usage on its own account.
+
+## Related
+
+- [NVIDIA Nemotron](/docs/sponsors/nvidia)
+- [Criteria › Agent tab](/docs/setup/criteria#agent-tab)
+- [Configuration › AI models and sandboxes](/docs/reference/configuration#ai-models-and-sandboxes)

@@ -1,0 +1,160 @@
+RoundZero uses a small set of terms across its pages. This page defines each one and shows how they connect.
+
+## How the pieces fit
+
+- A **hackathon** has a **schema**: the blocks every **project** fills in.
+- **Criteria** say what projects are scored on. Each criterion reads some of the schema blocks, and the agent checks it with one or more **mechanisms**.
+- Judging runs in **phases**. When a phase starts, its **judges** get **assignments**. The agent writes an **agent review** of each project, by default starting when judging starts. Judges don't wait for it.
+- A **gate** is a criterion every project must pass. Projects the agent fails on a gate wait in the **failed inbox**.
+- Closing a phase advances its top projects. Closing the last one gives every remaining project a final rank.
+- **Reward tiers** turn ranks and awards into **winners**, and **publishing** the results puts them on a public page.
+
+## Hackathons
+
+### Hackathon
+
+One event you run, with a name, tagline, dates, color, logo and banner. Its slug, made from the name when you create it, appears in its URLs: `/h/[slug]` for you and `/w/[slug]` for the public winners page. A hackathon belongs to the organizer who created it. Other organizers on the same instance don't see it.
+
+### Stage
+
+Where a hackathon is in its life: **Setup**, **Judging** or **Results**. A new hackathon starts in Setup. **Start judging** moves it to Judging, and closing the last phase moves it to Results. The home screen shows the stage as a status such as "Setup — draft", "Judging — group review" or "Results published".
+
+The Setup, Judging and Results switch in a hackathon's header opens any area at any stage. Switching areas doesn't change the stage.
+
+## Submissions
+
+### Schema block
+
+One field of a project submission, set up in Setup › Schema. A block has a title, a type, a description and a note on what's expected. The types are **Text**, **Long text**, **Number**, **URL**, **Video**, **Repo**, **File**, **Select**, **Image** and **Team**.
+
+The first Text block is the project's name, and the next Text or Long text block is its one-line pitch.
+
+### Project
+
+One team's submission: a value for each schema block, plus a contact email where results emails go. Each project gets a number, shown as `#012`, and a status: **in the running**, **eliminated** or **disqualified**. Projects come in by hand, through the public submission form, or through the Intake API. The project's audit trail records how it came in and what happened to it since: edits, moves between phases, scores and status changes.
+
+## Scoring
+
+### Criterion
+
+One thing projects are scored on, set up in Setup › Criteria.
+
+- **Scale**: **Score 1–10** or **Pass / fail**.
+- **Weight**: its share of the total, in percent. Weights should add up to 100%.
+- **Description**: the rubric that judges and the agent score against.
+- **Inputs**: the schema blocks it reads, or **All inputs**.
+- **If inputs are missing**: **Judge what's there** or **Score 0**.
+
+A review's total is the weighted score out of 10.
+
+### Mechanism
+
+How the agent gathers evidence for a criterion. A criterion can use several.
+
+| Mechanism | What it does |
+| --- | --- |
+| **Agent judge** | LLM reads inputs, scores against the rubric |
+| **Sandbox run** | Clones and builds the repo, runs tests |
+| **Video reviewer** | Transcript, scene check, length check |
+| **Code scraper** | Greps the repo for imports and call sites |
+| **Web scraper** | Visits the live demo, captures pages |
+| **Human only** | No agent score — judges only |
+
+### Model tier
+
+How much model the agent spends on a criterion, set on the criterion's **Agent** tab.
+
+| Tier | What it means |
+| --- | --- |
+| **Quick** | Small, fast model. One pass over what the mechanisms found. |
+| **Balanced** | Checks a few things itself with tools before it scores. |
+| **In-depth** | Largest model, with room to dig: more tool calls, slower. |
+
+The models behind each tier are set in the environment. See [Configuration](/docs/reference/configuration).
+
+### Double check
+
+Whether a second pass re-checks the agent's verdict on a criterion: **Off**, **When unsure** (low confidence, flags or a failed gate), or **Always**. The double check runs one tier up from the criterion's tier, so Quick is re-checked on Balanced and Balanced on In-depth. In-depth is already the top tier, so it's re-checked on In-depth again.
+
+### Gate
+
+A **Pass / fail** criterion with **Gate eligibility** turned on. Failing it makes a project ineligible, whatever its other scores.
+
+- When the agent fails a project on a gate, the project goes to the [failed inbox](#failed-inbox).
+- When judges fail a project on a gate, the **Failed gates** setting in Setup › Distribution decides what happens: **Flag it** for you, or **Rule it out** once enough reviews agree.
+
+A project that's ruled out ranks last, is eliminated when its phase closes, and can't win an award.
+
+## Judging
+
+### Phase
+
+One round of judging, set up in Setup › Phases. A phase has:
+
+- **Judges**: **All judges**, or one saved judge group.
+- **Reviews per project**: a set number of judges per project, or **Everyone reviews all**.
+- **Advance**: how many top projects go on to the next phase. The last phase picks the winners, so nothing advances from it.
+
+One phase runs at a time. Closing it ranks its projects: gate passes first, then average judge score, then agent score, then submission order. The top projects move to the next phase and the rest are eliminated.
+
+### Judge
+
+A person who scores projects. Judges don't have accounts. Each one has a private link, `/j/[token]`, that shows only their own queue. You add judges in Setup › Judges with a name, title, email, photo and any custom fields you define.
+
+### Judge group
+
+A saved set of judges, such as a final panel. A phase can go to one group instead of every judge.
+
+### Assignment
+
+One judge reviewing one project in one phase. Assignments are made when a phase starts, following Setup › Distribution:
+
+- **Strategy**: **Even split** gives every judge the same number of projects. **Mixed** also rotates who is paired with whom, so no two judges share every project.
+- **Cadence**: **All at once**, or **Daily batches** spread over a number of days. With daily batches, each judge's queue is split into one batch per day.
+
+An organizer can also add their own review of a project on top of the judges' reviews.
+
+### Agent review
+
+The agent's review of one project. It runs each criterion as a step: it gathers evidence with the criterion's mechanisms, investigates with tools, scores, and double-checks when the criterion asks for it.
+
+With **Agent first** on, an agent review is queued for every project when judging starts. **Run agent** on Judging › Progress reviews any project the agent hasn't. On a project's page you can rerun, override or flag a single step.
+
+With **Show agent score** on, judges see the agent's score only after they submit their own, and can adjust theirs once.
+
+### Failed inbox
+
+Projects the agent failed on a gate, waiting for a person's call. Open it from **Inbox** in the hackathon's header once judging has started.
+
+- **Agree — keep it out**: the failure stands. The project ranks below every project that passed and can't win an award. You can eliminate it at the same time.
+- **Disagree — back in the pool**: the failure is cleared and the project ranks on its scores.
+
+The **Agent-failed inbox** setting in Setup › Distribution decides who makes the call: you, one judge, or nobody (failures stand).
+
+## Results
+
+### Reward tier
+
+A prize, set up in Judging › Rewards. A tier is either:
+
+- **Final rank**: every project whose final rank falls in the range wins it, for example ranks 2 to 3.
+- **Award**: a set number of winners, picked **By hand** or suggested by the **Top on a criterion**.
+
+Each tier holds one or more items: cash, credits, a link, a code, text, an image, a file or swag. The **One prize per team** setting stops several entries from the same team from winning more than one reward.
+
+### Winner
+
+A project that wins at least one reward tier. Rank tiers follow the final ranking; award winners are picked on Results › Winners.
+
+### Published results
+
+**Publish results** on Results › Winners makes the winners page at `/w/[slug]` public. You can publish once the last phase has closed. Before that, only you can preview the page. **Unpublish** makes it private again. Judges' scores, notes and redeemable prize details such as codes stay private either way.
+
+## Related
+
+<Cards>
+  <Card href="/docs/quickstart" title="Quickstart" icon="play">Run a hackathon end to end.</Card>
+  <Card href="/docs/setup/criteria" title="Criteria" icon="check-list">Scales, weights, gates and mechanisms.</Card>
+  <Card href="/docs/setup/phases" title="Phases" icon="calendar">Rounds of judging and what advances.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">How assignments are handed out.</Card>
+</Cards>

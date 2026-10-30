@@ -1,0 +1,76 @@
+<PageInfo path="/h/[slug]" access="organizer" nav="Inbox button in the hackathon's top bar, on every page once judging starts" />
+
+When the agent fails a project on a gate criterion, a person should make the final call. The failed inbox is where you make it. You either agree with the agent and keep the project out, or disagree and put it back in the pool. It opens as a drawer from the **Inbox** button in the top bar, so you can check it from any page of the hackathon.
+
+## What a failed gate does
+
+A gate is a pass/fail [criterion](/docs/setup/criteria) that a project has to pass. When the agent fails a project on one, the failure counts straight away and stands until someone overturns it. Until then the project:
+
+- ranks below every project that passed, in the running phase and in the final ranking
+- can't win an award
+
+The project stays in its phase and in the running. When the phase closes, it's ranked after every project that passed, so it only advances if there's room. The failed step is also flagged for a person on the project page and under **Needs a person** on [Progress](/docs/judging/progress).
+
+## The Inbox button
+
+The button appears once judging has started and there's something in the inbox. A count on it shows how many projects are waiting for a call.
+
+A project waits in the inbox when the agent failed it on a gate, it's still in the running, and nobody has decided on it yet. Projects that were eliminated or disqualified some other way don't wait for a call.
+
+## Make a call
+
+Open the inbox and stay on the **To decide** tab. Each card shows:
+
+- the project's number, name and pitch. The name links to the project's agent review.
+- the agent's score
+- each gate it failed, with the agent's reasoning. If you overrode a gate step to a fail on the project page, the card says **Overridden to a fail** and shows your reason instead.
+
+Then pick one:
+
+| Button | Result |
+| --- | --- |
+| **Disagree — back in the pool** | The gate failure is cleared. The project ranks on its scores like any other, can advance and can win awards. |
+| **Agree — keep it out** | The failure stands. The project ranks below every project that passed and can't win an award. |
+
+Both ask you to confirm, and both take an optional **Note** for the audit trail. When you agree, you can also switch on **Eliminate it now** to take the project out of the running and out of judges' queues straight away. Leave it off and the project stays in its phase and ranks last.
+
+Every call is logged in the project's [audit trail](/docs/judging/project#audit-trail), naming the gates that failed.
+
+## Undo a call
+
+The **Decided** tab lists every call, newest first, with a badge showing the outcome:
+
+- **Overturned · back in the pool**
+- **Upheld · kept out**
+- **Upheld · eliminated**
+
+Each entry shows when the call was made and any note. **Undo** sends the project back to **To decide**, and the agent's failure counts again until someone decides. If the call eliminated the project, undoing it reinstates the project, unless its phase has already closed.
+
+A call is also cleared on its own when the verdict it was about changes. That happens when the agent reviews the project again, or when you [override](/docs/judging/project#directing-a-step) the gate step so every gate passes.
+
+## Who reviews the inbox
+
+Choose who handles gate failures with **Agent-failed inbox** in [Distribution](/docs/setup/distribution). You can change it only while **Agent first** is on.
+
+| Setting | What happens |
+| --- | --- |
+| You, the hackathon owner (the default) | Failures wait in the inbox for your call. |
+| A judge | Failures wait in the inbox, and the drawer names that judge as the one who reviews them. You can still decide. |
+| **Nobody — drop them** | Failures stand without a call. They don't count as waiting, so the Inbox button doesn't show them. |
+
+Like the rest of Distribution, this setting locks once judging starts.
+
+<Callout type="note" title="Gates judges fail">
+
+The inbox only covers the agent's verdicts. When judges fail a project on a gate, the project page and Progress show it as **gate flagged** or **ruled out**, depending on the failed-gate rule in Distribution.
+
+</Callout>
+
+## Related
+
+<Cards>
+<Card href="/docs/judging/project" title="Project detail" icon="eye">The agent's full review, and overriding a gate step.</Card>
+<Card href="/docs/setup/distribution" title="Distribution" icon="grid">Choose who reviews gate failures.</Card>
+<Card href="/docs/setup/criteria" title="Criteria" icon="check-list">Make a criterion a gate.</Card>
+<Card href="/docs/judging/progress" title="Progress" icon="chart-line">See how many projects failed a gate.</Card>
+</Cards>

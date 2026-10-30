@@ -1,0 +1,73 @@
+<PageInfo path="/" access="organizer" nav="The logo at the top left of any page" />
+
+**Your hackathons** is the home screen. It lists every hackathon you created, newest first, with its stage and how far judging has got. From here you open a hackathon or start a new one.
+
+The list only holds your own hackathons. Each hackathon belongs to the organizer who created it, so other organizers on the same instance have their own lists.
+
+If you open `/` while signed out, you're sent to the sign-in screen. See [Sign in and settings](/docs/workspace/account). On the official RoundZero site, signed-out visitors see the landing page instead; see [Configuration](/docs/reference/configuration#landing-page-and-site-hosts).
+
+## The summary line
+
+Under the heading, a line counts your hackathons ("events") and the total number of projects across all of them.
+
+## Cards and list views
+
+The **Cards** and **List** switch at the top right changes how the hackathons are shown. The page opens in Cards view each time you load it.
+
+### Cards
+
+Each card shows:
+
+- The hackathon's banner, or a generated pixel cover in its color when there's no banner.
+- Its logo, or initials when there's no logo, and its tagline.
+- Its name, dates ("Dates TBD" when none are set), and its project and judge counts.
+- A status badge. While judging runs, the card also shows the percent reviewed and a progress bar. Once results are published, the badge has a check mark and the card shows a **Winners page** line.
+
+The last tile, **Start a hackathon**, opens [Create a hackathon](/docs/workspace/new-hackathon).
+
+### List
+
+The list is a table with **Name**, **Dates**, **Stage**, **Progress**, **Projects** and **Judges** columns. With no hackathons yet, it shows "No hackathons yet." and a **Start one** link.
+
+## Status
+
+The status badge combines the hackathon's stage with where judging stands.
+
+| Status | Meaning |
+| --- | --- |
+| Setup — draft | Judging hasn't started. |
+| Judging — *phase name* | Judging is running, in the named phase. |
+| Judging | The stage is Judging but no phase is running. |
+| Results — draft | The last phase has closed and results aren't published yet. |
+| Results published | The public winners page is live. |
+
+See [Key concepts](/docs/concepts#stage) for how a hackathon moves between stages.
+
+## Progress
+
+Progress is the share of the running phase's judge assignments that have been submitted. Reviews an organizer adds as their own don't count. It reads 0% before judging starts and 100% once the hackathon reaches Results.
+
+## Opening a hackathon
+
+Click a card or a name in the list. The hackathon opens in the area that matches its stage:
+
+| Stage | Opens on |
+| --- | --- |
+| Setup | Setup › Schema |
+| Judging | Judging › Projects |
+| Results | Results › Winners |
+
+To come back here from inside a hackathon, click the logo at the top left.
+
+## New hackathon
+
+Click **New hackathon** at the top right, or the **Start a hackathon** tile, to create one. See [Create a hackathon](/docs/workspace/new-hackathon).
+
+## Related
+
+<Cards>
+  <Card href="/docs/workspace/new-hackathon" title="Create a hackathon" icon="plus">The new hackathon form and its defaults.</Card>
+  <Card href="/docs/concepts" title="Key concepts" icon="notebook">Stages, phases and the rest of the vocabulary.</Card>
+  <Card href="/docs/judging/progress" title="Progress" icon="chart-line">Follow judging inside a hackathon.</Card>
+  <Card href="/docs/workspace/account" title="Sign in and settings" icon="user">Organizer accounts and the account menu.</Card>
+</Cards>

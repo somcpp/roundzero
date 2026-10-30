@@ -1,0 +1,97 @@
+<PageInfo path="/h/[slug]/setup/judges" access="organizer" nav="Setup › Judges" />
+
+This page is the hackathon's judge directory. Add each judge with a name, title, email and photo, sort them with custom fields like Company or Track, and save groups you can hand a judging phase to. Every judge you save gets a private link to score their queue. Judges don't need an account.
+
+## Add a judge
+
+<Steps>
+
+### Open the drawer
+
+Click **Add judge** in the page header. With no judges yet, click **Add your first judge**.
+
+### Fill in their details
+
+Only **Name** is required. The fields are described below.
+
+### Save
+
+Click **Add judge** in the drawer footer. To edit a judge later, click their card, change what you need and click **Save**.
+
+</Steps>
+
+| Field | Notes |
+| --- | --- |
+| Photo | Drop an image on the avatar, or click **Upload photo**. PNG, JPEG, WebP or GIF, under 20 MB. Square headshots look best. Without a photo, the judge gets a pixel avatar. |
+| **Name** | Required. Up to 120 characters. |
+| **Title** | A role, such as Head of Developer Relations. Up to 160 characters. |
+| **Email** | Where their judging link goes. Optional, but two judges in one hackathon can't share an address. |
+| Custom fields | One chip row per field. Pick one option, or click the **New …** chip (such as **New company**) to type a new option on the spot. |
+| **Groups** | Click a group to add or remove the judge. A judge can be in several groups. |
+
+If you have a group open or field filters on when you click **Add judge**, the new judge starts in that group with those field values.
+
+Closing a drawer with unsaved edits asks **Discard changes?** first.
+
+## Judging links
+
+Once a judge is saved, their drawer shows a **Judging link** in the form `/j/<token>`, with buttons to copy it and open it. The link opens that judge's queue with no sign-in, so anyone who has it can score as them. Send each link directly to its judge.
+
+If a link leaks, click **New link** and confirm. The old link stops working straight away, so send the judge the new one.
+
+When a phase starts, and email is set up on your server, every judge with an email address and projects in that phase gets their link by email. The **Judge links** tab on [Judge portal](/docs/setup/portal) lists every link in one place, with **Copy all links**.
+
+## Custom fields
+
+Custom fields are your own labels for judges, like Company or Track, each with a fixed set of options. Use them to filter the directory, group it, and build judge groups faster.
+
+To set them up, click **Add a field** under **Fields** in the sidebar (or **Edit** once you have some). In the **Custom fields** drawer:
+
+- Click **Add field** and give it a name, up to 60 characters. Field names must be unique.
+- Click **Add option** to add each option, up to 80 characters. A field can't have the same option twice.
+- Click the trash or **x** icon to remove a field or option. Judges who had it lose that value when you save.
+- Click **Save fields**.
+
+The number next to each option is how many judges have it.
+
+## Groups
+
+A group is a saved set of judges, such as a final panel. On [Phases](/docs/setup/phases) you can give a whole phase to one group instead of all judges.
+
+- Click **New group** in the sidebar. If a search or filter is on, the button reads **Save N as group** and starts the group with the judges you're looking at.
+- In the drawer, give the group a **Name** (up to 60 characters) and tick judges in the **Judges** list. Search and the field chips narrow the list, and **Select all** (or **Select N matching**) ticks everything shown.
+- Click **Create group**.
+
+Click a group in the sidebar to see only its members. Click **Edit group** in the header, or the gear icon next to the group, to change it.
+
+## Find judges
+
+Above the directory:
+
+- **Search judges…** matches names, titles, emails and field values.
+- Each custom field gets a filter. Its last option, **No …**, finds judges with no value for it.
+- **Group by** splits the directory into sections by a field or by group.
+- **Grid** shows photo cards. **List** shows a table with email, field values and groups.
+
+**Clear** resets the search and filters.
+
+## Delete judges and groups
+
+To delete a judge, open them, click the trash icon in the drawer footer and confirm **Delete judge**. They're removed from every group and their photo is deleted. This can't be undone.
+
+To delete a group, open it the same way and confirm **Delete group**. Its judges stay in the directory.
+
+<Callout type="warning" title="After judging starts">
+
+You can still add judges and edit anyone's details. You can't delete a judge who has reviews, because their reviews would go too, or a group that a phase uses. To do either, reset judging from [Progress](/docs/judging/progress) first.
+
+</Callout>
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/phases" title="Phases" icon="calendar">Give a phase to all judges or one group.</Card>
+  <Card href="/docs/setup/portal" title="Judge portal" icon="eye">The screens judges see, and every judge link.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">How projects are split between judges.</Card>
+  <Card href="/docs/links/judge-portal" title="The judge's page" icon="link">What a judge does on their private link.</Card>
+</Cards>

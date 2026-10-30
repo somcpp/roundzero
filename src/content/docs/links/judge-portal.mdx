@@ -1,0 +1,100 @@
+<PageInfo path="/j/[token]" access="judge" nav="Setup › Judge portal › Judge links" />
+
+Every judge gets a private page where they work through the projects assigned to them and score each one. Judges don't need an account: the link itself is their key. This page covers what judges see there, so you can set it up and answer their questions.
+
+## Get a judge's link
+
+Each judge has a link from the moment you add them. You can copy it from:
+
+- **Setup › Judge portal**, on the **Judge links** tab. Each judge has copy and open buttons, and **Copy all links** copies every judge's name, email and link at once.
+- **Setup › Judges**, by opening a judge. The link is under **Judging link**.
+- **Judging › Progress**, next to each judge.
+
+The same link works in every phase. It always shows whatever that judge has in the phase that's running. RoundZero can also email judges their link when a phase starts, if outgoing email is set up. See [Configuration](/docs/reference/configuration).
+
+<Callout type="warning" title="Anyone with the link can score as that judge">
+
+Send each link directly to its judge. If you open a judge's link yourself to check it, any score you submit is saved as that judge's score.
+
+</Callout>
+
+### Replace a link
+
+If a link leaks, click **New link** next to the judge and confirm with **Make new link**. The old link stops working straight away, so send the judge the new one. Anyone opening the old link sees **This judging link doesn't work**, with a note to ask the organizers for the current one.
+
+## What judges see
+
+The page uses your hackathon's color and logo from [Branding](/docs/setup/branding). The top bar shows the hackathon's name, the judge's progress, and their name and photo.
+
+### Start screen
+
+When a judge opens their link, they see:
+
+- The phase name, plus the round number if you have more than one phase.
+- Your headline, or "Welcome," followed by the judge's first name.
+- How many projects they have, or how many are done and how many are left.
+- Your welcome message and the **Remember the goal** list, if you set them.
+- A **Start judging** button, which reads **Keep going** once they've scored something, and a rough time estimate.
+- **What you'll score**: each criterion with its weight, marked **pass / fail** or **must pass** where that applies.
+- Their project list, with a check and score next to each one they've finished.
+
+You write the headline, welcome message, goals and finish message on [Setup › Judge portal](/docs/setup/portal).
+
+### Scoring a project
+
+Each project opens on its own page. The left side shows the project's name, pitch and every field the team submitted. The right side is the rubric, headed **Your scores**:
+
+- A 1–10 score, or **Pass** / **Fail**, for each criterion, with its weight and description. Gate criteria carry a **gate** badge.
+- A running weighted total.
+- A **Notes** box, up to 4,000 characters.
+
+Judges have to score every criterion before they can submit. The button shows what comes next: **Submit & next**, or **Submit & finish** on the last project. Arrows in the top bar move between projects without submitting.
+
+Projects come in a different order for each judge, so the panel doesn't all start on the same few.
+
+### The agent's scores
+
+If **Show agent score** is on in [Distribution](/docs/setup/distribution) and the agent has reviewed the project, the button reads **Submit & see the agent's**. After submitting, the agent's verdict appears next to each of the judge's scores, and gaps of 2 points or more, or a different pass/fail, are flagged. The judge can change their score once. After that change, the score is final.
+
+### Finish screen
+
+When everything open is scored, the judge sees **All done!**, your finish message, and their scores. They can still reopen a project and change a score until you close the phase.
+
+With **Daily batches**, projects are released over several days. After finishing a day's batch, the judge sees **All done for today**, when the next batch opens, and a **Judge N more now** button to start it early.
+
+### When there's nothing to score
+
+| Message | Why |
+| --- | --- |
+| **Judging hasn't started yet** | You haven't started judging. |
+| **Nothing to judge right now** | One phase has closed and the next hasn't started. |
+| **Nothing for you in this round** | A phase is running, but this judge has no projects in it. |
+| **Judging is over** | The last phase has closed. |
+
+## Rules
+
+- A score saves only when the judge submits it.
+- When the agent's scores aren't shown, a judge can change a submitted score as often as they like until the phase closes.
+- Once a phase closes, its scores can't change.
+- If you take a project out of judging, it disappears from judges' queues.
+- Judges see only their own queue. They never see other judges' scores.
+
+## Share with your judges
+
+You can paste this section into your invite or send judges this page.
+
+- Your link is private and personal. Don't forward it: anyone who has it can score as you.
+- There's no account or password. Open the link on any device, and bookmark it. The same link works in every round.
+- Score every criterion, then submit. Nothing saves until you do.
+- Use **Notes** to say why you gave a score. The organizers read them.
+- You can change a score until the round closes. If the agent's scores appear after you submit, you can change yours once.
+- If your link stops working, ask the organizers for a new one.
+
+## Related
+
+<Cards>
+  <Card href="/docs/setup/judges" title="Judges" icon="users">Add judges and find each one's link.</Card>
+  <Card href="/docs/setup/portal" title="Judge portal settings" icon="eye">Write the start and finish screens judges see.</Card>
+  <Card href="/docs/setup/distribution" title="Distribution" icon="grid">Batches, the agent's score, and how projects are split.</Card>
+  <Card href="/docs/setup/criteria" title="Criteria" icon="check-list">The rubric judges score against.</Card>
+</Cards>

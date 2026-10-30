@@ -1,0 +1,48 @@
+NVIDIA's open [Nemotron](https://www.nvidia.com/en-us/ai-data-science/foundation-models/nemotron/) models make every judging call in RoundZero. The agent's three model tiers and both Chat modes run on Nemotron, served through [Nebius Token Factory](/docs/sponsors/nebius-token-factory).
+
+## The models
+
+| Model | Tier | Where it's used |
+| --- | --- | --- |
+| Nemotron 3.5 Lightning | **Quick** | One pass over the evidence, no tools. Chat's **Fast** mode. |
+| Nemotron 3 Super 120B | **Balanced**, the default | Up to 6 tool calls before scoring. Double checks for Quick. Chat's **Smart** mode and project summaries. |
+| Nemotron 3 Ultra 550B | **In-depth** | Up to 10 tool calls before scoring. Double checks for Balanced and In-depth. |
+
+Pick a criterion's tier under **Model** on its [Agent tab](/docs/setup/criteria#agent-tab). Every new hackathon's starting criteria use Balanced. The Agent tab shows which model each tier runs on right now.
+
+## What a tier changes
+
+A bigger tier gets a bigger model and more room to check things itself. On Balanced and In-depth, the model investigates before it scores. Which tools it gets depends on the criterion's mechanisms:
+
+- search the repo, read files and list folders, when there's a repo
+- run commands in the repo's [Nebius Sandbox](/docs/sponsors/nebius-sandboxes), with **Sandbox run**
+- read web pages and search the web with [Tavily](/docs/sponsors/tavily), with **Web scraper** or **Agent judge**
+- look at images, with **Video reviewer**
+
+It's told to verify a submission's claims instead of trusting them. When the tool budget runs out, it writes its findings with what it has.
+
+## Double checks
+
+When the agent is unsure, a bigger Nemotron model takes a second look at the same evidence: Quick is checked on Super, and Balanced and In-depth on Ultra. Whether a criterion double-checks is set under **Double-check** on its Agent tab. If the two verdicts disagree, a person settles it.
+
+## Why Nemotron judges the checks, not the ideas
+
+The agent's job is the questions that have answers: does the repo build, does the code call Token Factory, does the demo match the write-up, is the video three minutes or less. Judges score the ideas. The agent's score stays hidden from a judge until they submit their own, and rankings put the judges' average ahead of it. See [Key concepts](/docs/concepts).
+
+## Swap a model
+
+Each tier reads its model from an environment variable, so you can point it at another model on Token Factory without changing code.
+
+| Variable | Default |
+| --- | --- |
+| `NEBIUS_QUICK_MODEL` | `nvidia/Nemotron-3_5-Lightning` |
+| `NEBIUS_CHAT_MODEL` | `nvidia/nemotron-3-super-120b-a12b` |
+| `NEBIUS_DEEP_MODEL` | `nvidia/Nemotron-3-Ultra-550b-a55b` |
+
+The models need no NVIDIA key. Token Factory serves them with your `NEBIUS` key.
+
+## Related
+
+- [Nebius Token Factory](/docs/sponsors/nebius-token-factory)
+- [Criteria › Agent tab](/docs/setup/criteria#agent-tab)
+- [Chat](/docs/judging/chat)
