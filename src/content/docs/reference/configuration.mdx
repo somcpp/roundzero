@@ -82,6 +82,7 @@ The agent, the judging chat, image descriptions and search embeddings run on an 
 | --- | --- | --- |
 | `NVIDIA_API_KEY` | None | Free key from [build.nvidia.com](https://build.nvidia.com) (Generate API Key). Runs agent reviews, chat, image descriptions and embeddings. Takes priority over `NEBIUS` for models. |
 | `NEBIUS` | None | Nebius Token Factory API key. Needed for sandboxes, and for the models when `NVIDIA_API_KEY` isn't set. |
+| `DAYTONA_API_KEY` | None | Daytona API key ([app.daytona.io](https://app.daytona.io)). When set, sandbox runs use Daytona instead of Nebius: one ephemeral sandbox per project, deleted after 15 idle minutes. |
 | `NEBIUS_PROJECT_ID` | None | The Nebius project that sandboxes run in. `NEBIUS_AI_PROJECT` works as a fallback name. Without it, sandbox runs can't start. |
 | `NEBIUS_CHAT_MODEL` | `nvidia/nemotron-3-ultra-550b-a55b` / `nvidia/nemotron-3-super-120b-a12b` | The chat model, and the agent's **Balanced** tier. |
 | `NEBIUS_QUICK_MODEL` | `nvidia/nemotron-3.5-lightning-30b-a3b` / `nvidia/Nemotron-3_5-Lightning` | The **Quick** tier, and the chat's **Fast** option. |

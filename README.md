@@ -181,7 +181,8 @@ EMAIL_REDIRECT_TO=you@your-domain.com
 | `SUPABASE_SECRET_KEY` | The Intake API, the submission form, email sends and the demo seed script | The Intake API returns `503` and no emails go out |
 | `SUPABASE_DB_PASSWORD` | The Supabase CLI, when you run migrations | The app itself doesn't use it |
 | `NVIDIA_API_KEY` | Free. Agent reviews, chat, image descriptions and embeddings | Falls back to `NEBIUS` |
-| `NEBIUS` | Sandboxes, and the models when `NVIDIA_API_KEY` isn't set | Sandbox runs are skipped |
+| `DAYTONA_API_KEY` | Sandbox runs on Daytona: building, running and testing submitted code | Falls back to `NEBIUS` sandboxes, else skipped |
+| `NEBIUS` | Sandboxes when `DAYTONA_API_KEY` isn't set, and the models when `NVIDIA_API_KEY` isn't set | Sandbox runs are skipped |
 | `NEBIUS_PROJECT_ID` | Sandbox runs | Sandbox runs can't start |
 | `TAVILY` | The Web scraper, the web tools of the agent and the chat, and indexing linked pages | Those steps are skipped |
 | `SCRAPE_CREATORS_API_KEY` | YouTube details and transcripts | YouTube videos are reviewed without them. Vimeo and Loom don't need it. |
