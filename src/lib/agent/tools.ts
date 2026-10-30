@@ -5,7 +5,7 @@ import { commandOutput, type Collected } from "./collect";
 import { clip } from "./fetch";
 import type { StepRecorder } from "./recorder";
 import { globRegex, grepText, safeRegex, SEARCH_EXCLUDE } from "./repo";
-import { grepImage, readImageFile } from "./sandbox";
+import { grepImage, readImageFile, sandboxLabel } from "./sandbox";
 import { formatTime } from "./video";
 import { describeImages, viewImages } from "./vision";
 import { readPages, searchWeb } from "./web";
@@ -170,7 +170,7 @@ export function investigationTools({
       `runCommand runs shell commands in this project's sandbox branch: ${sandbox.description} Earlier install/build/test commands already ran there (see the Sandbox run evidence). There are no API keys or secrets in it: if the project needs them, say so rather than treating the failure as a bug.`,
     );
     tools.runCommand = tool({
-      description: "Run a shell command in the project's Nebius sandbox (the repo is the working directory). Returns the exit code and the end of its output.",
+      description: `Run a shell command in the project's sandbox (${sandboxLabel()}; the repo is the working directory). Returns the exit code and the end of its output.`,
       inputSchema: z.object({
         command: z.string().min(1).max(2000),
         timeoutSec: z.number().int().min(10).max(300).optional().describe("Default 180"),

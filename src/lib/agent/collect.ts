@@ -5,7 +5,7 @@ import { checkLink, clip, tail } from "./fetch";
 import type { Section } from "./judge";
 import type { StepRecorder } from "./recorder";
 import { describeRepo, parseRepoUrl, searchRepo, snapshotRepo, type RepoSnapshot } from "./repo";
-import { sandboxStatus, type CommandResult, type RepoSandbox } from "./sandbox";
+import { sandboxLabel, sandboxStatus, type CommandResult, type RepoSandbox } from "./sandbox";
 import type { Flag } from "./types";
 import { describeVideo, formatTime, inspectVideo, vimeoId, youtubeId, type VideoInfo } from "./video";
 import { describeImages, viewImages } from "./vision";
@@ -161,7 +161,7 @@ async function collectRepo(ctx: CollectContext, out: Collected) {
   rec.add({
     kind: "mechanism",
     mechanism: "code_scraper",
-    title: snap.via === "archive" ? `Read ${ref.webUrl} from its source archive` : `Cloned ${ref.webUrl} in a Nebius sandbox`,
+    title: snap.via === "archive" ? `Read ${ref.webUrl} from its source archive` : `Cloned ${ref.webUrl} in ${sandboxLabel()}`,
     detail: [`${snap.fileCount} files · ${snap.totalCommits ?? snap.commits.length} commits read`, ...snap.notes].join("\n"),
     url: ref.webUrl,
     ok: true,
@@ -270,7 +270,7 @@ async function runPlan(ctx: CollectContext, out: Collected, snap: RepoSnapshot) 
   const status = sandboxStatus();
   if (!status.ok) return skip(status.reason);
 
-  rec.doing(`Cloning ${snap.repo.webUrl} in a Nebius sandbox`);
+  rec.doing(`Cloning ${snap.repo.webUrl} in ${sandboxLabel()}`);
   const cloneStarted = Date.now();
   let base: RepoSandbox;
   try {
@@ -278,7 +278,7 @@ async function runPlan(ctx: CollectContext, out: Collected, snap: RepoSnapshot) 
   } catch (e) {
     return skip(`couldn't clone the repo into a sandbox (${message(e)})`);
   }
-  rec.add({ kind: "mechanism", mechanism: "sandbox_run", title: `Cloned ${snap.repo.webUrl} in a Nebius sandbox`, ms: Date.now() - cloneStarted, ok: true });
+  rec.add({ kind: "mechanism", mechanism: "sandbox_run", title: `Cloned ${snap.repo.webUrl} in ${sandboxLabel()}`, ms: Date.now() - cloneStarted, ok: true });
   // This step's own branch: its installs don't leak into another step's.
   const sandbox = base.fork();
   out.sandbox = sandbox;
@@ -328,7 +328,7 @@ async function runPlan(ctx: CollectContext, out: Collected, snap: RepoSnapshot) 
   out.sections.push({
     order: 2,
     title: "Sandbox run",
-    text: `Ran in a Nebius sandbox (Debian, Node 22, python3) on a fresh clone, ${
+    text: `Ran in ${sandboxLabel()} (Linux, Node, python3) on a fresh clone, ${
       custom.length ? "with the organizer's commands" : `with commands picked from the repo (${plan.stack})`
     }. A failure can be the project's fault or the environment's (missing API keys, services, system packages): say which it looks like.\n\n${lines.join("\n\n")}`,
   });

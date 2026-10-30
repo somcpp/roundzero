@@ -4,16 +4,34 @@
 // carry over between its own commands without touching another step's.
 // Reading and grepping files goes through the inspect API, with no VM at all.
 // https://docs.tokenfactory.nebius.com/sandboxes/overview
+//
+// With DAYTONA_API_KEY set, the same functions run on Daytona instead
+// (./daytona.ts): image ids become "daytona:<sandbox id>" handles, and a
+// project's steps share one sandbox rather than forking images.
+
+import {
+  daytonaClone,
+  daytonaConfigured,
+  daytonaExec,
+  daytonaGrep,
+  daytonaListDir,
+  daytonaReadFile,
+  isDaytonaHandle,
+} from "./daytona";
 
 const BASE_URL = `${process.env.NEBIUS_SANDBOX_URL || "https://api.tokenfactory.nebius.com/sandboxes"}/v1`;
 const projectId = () => process.env.NEBIUS_PROJECT_ID || process.env.NEBIUS_AI_PROJECT || "";
 
 /** Whether sandboxes can run here, and why not. */
 export function sandboxStatus(): { ok: true } | { ok: false; reason: string } {
-  if (!process.env.NEBIUS) return { ok: false, reason: "NEBIUS isn't set" };
+  if (daytonaConfigured()) return { ok: true };
+  if (!process.env.NEBIUS) return { ok: false, reason: "no sandbox provider is set (DAYTONA_API_KEY or NEBIUS)" };
   if (!projectId()) return { ok: false, reason: "NEBIUS_PROJECT_ID isn't set" };
   return { ok: true };
 }
+
+/** Which provider runs sandboxes, for the agent's notes: "a Daytona sandbox" or "a Nebius sandbox". */
+export const sandboxLabel = () => (daytonaConfigured() ? "a Daytona sandbox" : "a Nebius sandbox");
 
 export class SandboxError extends Error {
   constructor(
@@ -240,6 +258,9 @@ export async function grepImage(
     signal?: AbortSignal;
   },
 ): Promise<{ hits: GrepHit[]; truncated: boolean }> {
+  if (isDaytonaHandle(image)) {
+    return daytonaGrep(image, { patterns, paths: paths ?? ["."], globs: globs ?? [], caseMode, maxTotal, maxCount });
+  }
   const { data } = await api<{
     matches: { path: string; line_number: number; line_text: string; type: "match" | "context" }[];
     truncated: boolean;
@@ -257,6 +278,10 @@ export async function grepImage(
 
 /** A directory's entries in an image, directories first. */
 export async function listImageDir(image: string, path: string, signal?: AbortSignal) {
+  if (isDaytonaHandle(image)) {
+    const files = await daytonaListDir(image, path);
+    return files.sort((a, b) => Number(b.dir) - Number(a.dir) || a.name.localeCompare(b.name));
+  }
   const { data } = await api<{ files: { path: string; is_dir: boolean; size: number }[] }>(`/inspect/${image}/list`, {
     query: { path },
     signal,
@@ -268,6 +293,7 @@ export async function listImageDir(image: string, path: string, signal?: AbortSi
 
 /** A text file from an image, or null when it isn't there. */
 export async function readImageFile(image: string, path: string, signal?: AbortSignal): Promise<string | null> {
+  if (isDaytonaHandle(image)) return daytonaReadFile(image, path);
   try {
     const { data } = await api<string>(`/inspect/${image}/download`, { query: { path, text: "" }, text: true, signal });
     return data;
@@ -280,9 +306,10 @@ export async function readImageFile(image: string, path: string, signal?: AbortS
 // ── A repo in a sandbox ───────────────────────────────────────────────────
 
 /**
- * A cloned repo the agent can run commands in. It chains images: each command
- * runs on the result of the last, so state carries over. `fork()` branches
- * from the current state.
+ * A cloned repo the agent can run commands in. On Nebius it chains images:
+ * each command runs on the result of the last, so state carries over, and
+ * `fork()` branches from the current state. On Daytona the sandbox itself
+ * keeps state, so forks share it and their commands take turns.
  */
 export class RepoSandbox {
   readonly log: CommandResult[] = [];
@@ -290,14 +317,28 @@ export class RepoSandbox {
   constructor(
     public image: string,
     readonly root: string,
+    // Daytona: one queue per sandbox, shared by its forks.
+    private readonly turns: { tail: Promise<unknown> } = { tail: Promise.resolve() },
   ) {}
 
   get description() {
-    return `A Linux VM (Debian bookworm, Node 22 with npm and corepack, git, curl, python3) with the repo cloned at ${this.root}. Commands run as root in ${this.root} with network access, and state carries over between commands.`;
+    return isDaytonaHandle(this.image)
+      ? `A Linux VM (Daytona sandbox with Node, npm, git, curl and python3) with the repo cloned at ${this.root}. Commands run in ${this.root} with network access, and state carries over between commands. Other review steps of this project share the sandbox.`
+      : `A Linux VM (Debian bookworm, Node 22 with npm and corepack, git, curl, python3) with the repo cloned at ${this.root}. Commands run as root in ${this.root} with network access, and state carries over between commands.`;
   }
 
   fork() {
-    return new RepoSandbox(this.image, this.root);
+    return new RepoSandbox(this.image, this.root, this.turns);
+  }
+
+  /** Run on Daytona, after any command already queued on this sandbox. */
+  private daytona(command: string, cwd: string, timeoutSec: number, env?: Record<string, string>): Promise<CommandResult> {
+    const next = this.turns.tail.then(async () => {
+      const r = await daytonaExec(this.image, { command, cwd, env, timeoutSec });
+      return { command, exitCode: r.exitCode, stdout: r.output, stderr: "", timedOut: r.timedOut, seconds: r.seconds };
+    });
+    this.turns.tail = next.catch(() => {});
+    return next;
   }
 
   async run({
@@ -313,6 +354,11 @@ export class RepoSandbox {
     abortSignal?: AbortSignal;
     timeoutSec?: number;
   }) {
+    if (isDaytonaHandle(this.image)) {
+      const result = await this.daytona(command, workingDirectory ?? this.root, timeoutSec, env);
+      this.log.push(result);
+      return { ...result, image: this.image };
+    }
     const result = await runInImage({
       image: this.image,
       command,
@@ -329,6 +375,7 @@ export class RepoSandbox {
 
   /** Run without saving any state: for looking around. */
   peek(command: string, signal?: AbortSignal, env?: Record<string, string>) {
+    if (isDaytonaHandle(this.image)) return this.daytona(command, this.root, 60, env).then((r) => ({ ...r, image: null }));
     return runInImage({ image: this.image, command, cwd: this.root, env, timeoutSec: 60, signal });
   }
 }
@@ -338,6 +385,7 @@ export async function cloneRepo(
   repo: { cloneUrl: string; ref: string | null; subdir: string | null },
   signal?: AbortSignal,
 ): Promise<{ sandbox: RepoSandbox; head: string; seconds: number }> {
+  if (daytonaConfigured()) return cloneOnDaytona(repo, signal);
   const image = await baseImage();
   // The URL and ref go in as env vars, never spliced into the command.
   const command = [
@@ -366,4 +414,25 @@ export async function cloneRepo(
   }
   const root = repo.subdir ? `/work/repo/${repo.subdir.replace(/^\/+|\/+$/g, "")}` : "/work/repo";
   return { sandbox: new RepoSandbox(result.image, root), head: result.stdout.trim(), seconds: result.seconds };
+}
+
+/** cloneRepo on Daytona: a fresh sandbox per project, the repo under /tmp so any sandbox user can write it. */
+async function cloneOnDaytona(
+  repo: { cloneUrl: string; ref: string | null; subdir: string | null },
+  signal?: AbortSignal,
+): Promise<{ sandbox: RepoSandbox; head: string; seconds: number }> {
+  const checkout = "/tmp/roundzero/repo";
+  const { image, run } = await daytonaClone(repo, checkout, signal);
+  if (run.exitCode !== 0) {
+    const why = run.output.trim().split("\n").slice(-3).join(" ");
+    const hint = /not found|could not read|authentication|terminal prompts disabled/i.test(why)
+      ? "The repo doesn't exist or isn't public."
+      : run.timedOut
+        ? "Cloning timed out."
+        : "";
+    throw new SandboxError(`Couldn't clone ${repo.cloneUrl}. ${hint} ${why}`.replace(/\s+/g, " ").trim());
+  }
+  const root = repo.subdir ? `${checkout}/${repo.subdir.replace(/^\/+|\/+$/g, "")}` : checkout;
+  const head = run.output.trim().split("\n").pop() ?? "";
+  return { sandbox: new RepoSandbox(image, root), head, seconds: run.seconds };
 }

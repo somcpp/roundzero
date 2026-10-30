@@ -1,6 +1,6 @@
 import { gunzipSync } from "node:zlib";
 import { clip, USER_AGENT, withTimeout } from "./fetch";
-import { cloneRepo, grepImage, readImageFile, sandboxStatus, type GrepHit, type RepoSandbox } from "./sandbox";
+import { cloneRepo, grepImage, readImageFile, sandboxLabel, sandboxStatus, type GrepHit, type RepoSandbox } from "./sandbox";
 
 // What the agent knows about a project's repo. It's read from the host's
 // tarball: every text file lands in memory, so searching the whole repo takes
@@ -462,7 +462,7 @@ export function describeRepo(snap: RepoSnapshot) {
   const { repo } = snap;
   const lines = [
     `Repo: ${repo.webUrl}${repo.ref ? ` @ ${repo.ref}` : ""}${repo.subdir ? ` (folder ${repo.subdir})` : ""}, read ${
-      snap.via === "archive" ? "from its source archive" : "from a clone in a Nebius sandbox"
+      snap.via === "archive" ? "from its source archive" : `from a clone in ${sandboxLabel()}`
     }.`,
     `${snap.fileCount} files. Mix: ${snap.extensions.map(([ext, n]) => `${ext} ${n}`).join(", ") || "—"}.`,
   ];
