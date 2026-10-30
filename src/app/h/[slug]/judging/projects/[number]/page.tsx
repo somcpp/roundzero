@@ -24,7 +24,7 @@ import { Submission } from "./submission";
 import { WinnerBanner, listNames } from "./winner-banner";
 
 // The agent's runs start from this page and carry on after the response.
-export const maxDuration = 800;
+export const maxDuration = 300;
 
 export default async function ProjectPage({ params }: PageProps<"/h/[slug]/judging/projects/[number]">) {
   const { slug, number } = await params;

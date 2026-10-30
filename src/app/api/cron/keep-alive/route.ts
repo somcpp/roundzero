@@ -6,7 +6,7 @@ import { appUrl, emailConfig, sender } from "@/lib/email/config";
 // Keeps the Supabase project awake. Supabase pauses a Free-plan project after
 // a week without database activity, and a paused project answers every request
 // with HTTP 540 until someone restores it from the dashboard. vercel.json calls
-// this every 6 hours. Each run reads from the database, Auth and Storage. If
+// this once a day. Each run reads from the database, Auth and Storage. If
 // they still fail after a couple of retries, it emails ALERT_EMAIL through
 // Resend. (Vercel Hobby only allows daily crons; use one schedule per run there.)
 //
@@ -94,7 +94,7 @@ async function sendAlert(url: string, checks: Check[]): Promise<string> {
     ...checks.filter((c) => !c.ok).map((c) => `- ${c.name}: ${c.error}`),
     "",
     "Supabase status: https://status.supabase.com",
-    `Sent by ${appUrl()}/api/cron/keep-alive, which runs every 6 hours.`,
+    `Sent by ${appUrl()}/api/cron/keep-alive, which runs once a day.`,
   ].join("\n");
 
   const { data, error } = await new Resend(config.apiKey).emails.send(

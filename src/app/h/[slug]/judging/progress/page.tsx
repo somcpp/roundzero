@@ -36,7 +36,7 @@ function poolOf(phase: JudgingPhase | undefined, directory: JudgeDirectory) {
 }
 
 // Starting judging and "Run agent" set the agent working after the response.
-export const maxDuration = 800;
+export const maxDuration = 300;
 
 export default async function ProgressPage({ params }: PageProps<"/h/[slug]/judging/progress">) {
   const { slug } = await params;

@@ -230,7 +230,7 @@ RoundZero runs on Vercel or any Node.js host. On Vercel, import the repository, 
 
 - **Agent reviews** run in the background after the request that starts them returns. The pages that start them allow up to 800 seconds, and the chat endpoint allows 120. A worker keeps claiming queued reviews for up to 25 minutes (`AGENT_WORKER_BUDGET_MS`). On Vercel, the function's duration limit cuts that short, and unfinished reviews are picked up the next time the agent runs.
 - **Emails** run as durable workflows through the Workflow DevKit (the `workflow` package), wired in by `withWorkflow` in `next.config.ts`. Each send is keyed, so a retry never sends an email twice. Local runs keep their state in `.workflow-data/`.
-- **Keep-alive**: `vercel.json` schedules a cron job that calls `/api/cron/keep-alive` every 6 hours. It reads from the database, Auth and Storage, so Supabase doesn't pause a Free-plan project for inactivity. If Supabase doesn't answer, it emails `ALERT_EMAIL`.
+- **Keep-alive**: `vercel.json` schedules a cron job that calls `/api/cron/keep-alive` once a day (the Vercel Hobby limit). It reads from the database, Auth and Storage, so Supabase doesn't pause a Free-plan project for inactivity. If Supabase doesn't answer, it emails `ALERT_EMAIL`.
 
 See [Deployment](src/content/docs/reference/deployment.mdx) for the full checklist.
 

@@ -100,7 +100,7 @@ On Vercel, import the repository, add the environment variables, and deploy. Set
 
 ### Long-running work
 
-- **Agent reviews** run in the background after the request that starts them returns. The pages that start them allow up to 800 seconds (`maxDuration = 800`), and the chat endpoint allows 120. One agent worker keeps claiming queued reviews for up to 25 minutes (`AGENT_WORKER_BUDGET_MS`). On Vercel, the function's duration limit cuts that short, and unfinished reviews are picked up the next time the agent runs.
+- **Agent reviews** run in the background after the request that starts them returns. The pages that start them allow up to 300 seconds (`maxDuration = 300`, the Vercel Hobby limit; raise it to 800 on Pro), and the chat endpoint allows 120. One agent worker keeps claiming queued reviews for up to 25 minutes (`AGENT_WORKER_BUDGET_MS`). On Vercel, the function's duration limit cuts that short, and unfinished reviews are picked up the next time the agent runs.
 - **Emails** run as durable workflows through the `workflow` package (Workflow DevKit), wired in by `withWorkflow` in `next.config.ts`. A phase's run sends judge invites, daily batch reminders and a last call, and notifies the organizer. Results runs send winner and thank-you emails. Its endpoints live under `/.well-known/workflow/`, and the auth proxy skips them. Local runs keep their state in `.workflow-data/`.
 
 ### Keep Supabase awake
