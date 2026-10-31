@@ -94,7 +94,7 @@ function SandboxNote({ reason }: { reason: string }) {
       <PixelIcon name="gear" size={12} className="mt-0.5 shrink-0" />
       <span>
         Sandbox runs are off: {reason}. The agent still reads and searches the code, but can&apos;t install, build or test
-        it. Add your Nebius project id as NEBIUS_PROJECT_ID to turn them on.
+        it. Add a DAYTONA_API_KEY to turn them on.
       </span>
     </p>
   );

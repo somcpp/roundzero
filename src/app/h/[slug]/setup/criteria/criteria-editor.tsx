@@ -514,7 +514,7 @@ function AgentFields({
             onChange={(e) => onChange({ sandboxCommands: e.target.value })}
           />
           <span className="text-xs text-muted">
-            One per line, run in order in a Nebius sandbox with the repo cloned. Leave empty and the agent works out
+            One per line, run in order in a sandbox with the repo cloned. Leave empty and the agent works out
             install, build and test itself.
           </span>
         </Field>

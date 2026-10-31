@@ -3,17 +3,17 @@ import { EMPTY_SCOPE, getThread, listThreads } from "@/lib/chat";
 import { listJudgeDirectory } from "@/lib/judges";
 import { getJudgingActivity, listPhases, listProjects } from "@/lib/judging";
 import { getViewableHackathon } from "@/lib/hackathons";
-import { CHAT_MODELS, TIER_MODEL_IDS, type ChatModelKey } from "@/lib/ai";
+import { AI_PROVIDER, CHAT_MODELS, TIER_MODEL_IDS, type ChatModelKey } from "@/lib/ai";
 import type { ChatUIMessage } from "@/lib/chat-agent";
 import { getIndexStatus } from "@/lib/project-index";
 import { projectHeadline } from "@/lib/project-fields";
 import { listSchemaBlocks } from "@/lib/schema-blocks";
 import { ProjectChat, type ChatModelOption, type ChatProject } from "./project-chat";
 
-/** A model picker choice with the Nebius model it runs, for the client. */
+/** A model picker choice with the model it runs and where it's hosted, for the client. */
 function modelOption(key: ChatModelKey): ChatModelOption {
   const { label, hint, tier } = CHAT_MODELS[key];
-  return { label, hint, id: TIER_MODEL_IDS[tier] };
+  return { label, hint, id: TIER_MODEL_IDS[tier], host: AI_PROVIDER === "nvidia" ? "NVIDIA" : "Nebius" };
 }
 
 export default async function ChatPage({ params, searchParams }: PageProps<"/h/[slug]/judging/chat">) {

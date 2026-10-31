@@ -56,8 +56,8 @@ export type ChatProject = {
   judgeIds: string[];
 };
 
-/** One choice in the model picker; `id` is the Nebius model it runs. */
-export type ChatModelOption = { label: string; hint: string; id: string };
+/** One choice in the model picker; `id` is the model it runs, `host` where it runs. */
+export type ChatModelOption = { label: string; hint: string; id: string; host: string };
 
 type Named = { id: string; name: string };
 
@@ -253,7 +253,7 @@ export function ProjectChat({
             </Chip>
           ))}
           <span className="ml-auto flex items-center gap-1.5 text-muted">
-            <PixelIcon name={MODEL_ICONS[modelKey]} size={10} /> {models[modelKey].id.split("/").pop()} · Nebius
+            <PixelIcon name={MODEL_ICONS[modelKey]} size={10} /> {models[modelKey].id.split("/").pop()} · {models[modelKey].host}
           </span>
         </header>
 
