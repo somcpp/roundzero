@@ -103,14 +103,25 @@ const passageModel = isNvidia ? nvidiaEmbedder("passage") : llm.embeddingModel("
 const queryModel = isNvidia ? nvidiaEmbedder("query") : passageModel;
 const embeddingOptions = providerOptions({ dimensions: EMBEDDING_DIMENSIONS });
 
+/** NVIDIA's hosted embedding endpoint fails on batches, so texts go one per request, a few at a time. */
+const NVIDIA_EMBED_CONCURRENCY = 3;
+
 export async function embedTexts(values: string[]): Promise<number[][]> {
   if (values.length === 0) return [];
-  const { embeddings } = await embedMany({
-    model: passageModel,
-    values,
-    providerOptions: embeddingOptions,
-    maxParallelCalls: isNvidia ? 2 : 4,
-  });
+  if (isNvidia) {
+    const out: number[][] = new Array(values.length);
+    let next = 0;
+    const worker = async () => {
+      while (next < values.length) {
+        const i = next++;
+        const { embedding } = await embed({ model: passageModel, value: values[i], providerOptions: embeddingOptions });
+        out[i] = embedding;
+      }
+    };
+    await Promise.all(Array.from({ length: Math.min(NVIDIA_EMBED_CONCURRENCY, values.length) }, worker));
+    return out;
+  }
+  const { embeddings } = await embedMany({ model: passageModel, values, providerOptions: embeddingOptions, maxParallelCalls: 4 });
   return embeddings;
 }
 
