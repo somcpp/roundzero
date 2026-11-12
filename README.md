@@ -83,7 +83,7 @@ Every service has a free tier, and the app runs end to end on free tiers.
 
 ## Run it locally
 
-You need Node.js 22+ and accounts for Supabase and NVIDIA. Daytona, Tavily and Resend are optional.
+You need Node.js 20 or later and accounts for Supabase and NVIDIA. Daytona, Tavily and Resend are optional.
 
 **1. Install**
 
