@@ -7,6 +7,8 @@
 <p align="center"><b>Round Zero happens before the judges arrive.</b><br>
 The agent checks the code. The judges judge the idea.</p>
 
+<p align="center">🏆 <b>Winner: Best Open Source AI Project</b><br>Hacktoberfest, hosted and organized by Microsoft</p>
+
 <p align="center">
   <a href="https://roundzero-six.vercel.app">Live app</a> ·
   <a href="https://roundzero-six.vercel.app/login?demo">Try the demo</a> ·
